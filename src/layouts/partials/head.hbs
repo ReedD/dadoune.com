@@ -1,0 +1,18 @@
+<head>
+	<base href="/">
+	<meta charset="utf-8">
+	<title>{{#if title}}{{title}} | {{/if}}{{site.title}}</title>
+
+	<meta name="author" content="{{site.author}}">
+	<meta name="robots" content="{{#if robots}}{{robots}}{{else}}index, follow{{/if}}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="canonical" href="{{site.url}}{{#if path}}{{path}}/{{/if}}">
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+	{{#if styles}}
+		{{#each styles}}
+			<link rel="stylesheet" href="/{{this}}" media="all">
+		{{/each}}
+	{{/if}}
+</head>

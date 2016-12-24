@@ -1,0 +1,22 @@
+// Base
+@import 'utils/variables';
+@import 'utils/functions';
+
+// Vendors
+@import 'node_modules/bootstrap/scss/bootstrap-flex';
+
+@import 'node_modules/font-awesome/scss/font-awesome';
+
+// Custom Vendors
+@import 'vendors/bootstrap';
+@import 'vendors/angular';
+
+// Theme
+@import 'base/global';
+@import 'themes/prism';
+@import 'themes/default';
+
+// Pages
+@import 'pages/home';
+@import 'pages/projects';
+@import 'pages/404';

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{site.locale}}">
+{{>head}}
+
+<body>
+	<div class="container-fluid px-0 [[bodyClasses]]">
+
+		{{>header}}
+
+		<main class="main" role="main" ui-view="main"></main>
+		<script type="text/ng-template" id="partials/{{path}}/">
+			<!-- BEGIN PARTIAL partials/{{path}}/index.html -->
+			<div class="container">
+				<div class="row flex-items-xs-center">
+					<div class="col-md-12 col-lg-8">
+						<ul class="media-list">
+							{{#each repos}}
+								{{#unless fork}}
+									<li class="media mb-1" offline>
+										<div class="media-body media-middle">
+											<div class="media-heading h5">
+												<a href="{{html_url}}">{{name}}</a>
+											</div>
+											<div class="subtitle h6">{{description}}</div>
+											<div class="meta">
+												<div class="d-inline mr-1">
+													<div class="repo-language-color" style="background-color: {{lookup ../colors language}}"></div>
+													&nbsp;{{language}}
+												</div>
+												<div class="d-inline mr-1">
+													<i class="fa fa-star"></i> {{stargazers_count}}
+												</div>
+												<div class="d-inline mr-1">
+													<i class="fa fa-code-fork"></i> {{forks_count}}
+												</div>
+												<div class="d-inline mr-1">
+													Updated <time class="time" datetime="{{moment updated_at "YYYY-MM-DD"}}">{{moment updated_at "MMM Do YYYY"}}</time>
+												</div>
+											</div>
+										</div>
+									</li>
+								{{/unless}}
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END PARTIAL -->
+		</script>
+
+		{{>footer}}
+
+	</div>
+</body>
+</html>

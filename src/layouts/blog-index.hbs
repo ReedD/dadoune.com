@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="{{site.locale}}">
+{{>head}}
+
+<body>
+	<div class="container-fluid px-0 [[bodyClasses]]">
+
+		{{>header}}
+
+		<main class="main" role="main" ui-view="main"></main>
+		<script type="text/ng-template" id="partials/{{path}}/">
+			<!-- BEGIN PARTIAL partials/{{path}}/index.html -->
+			<div class="container">
+				<div class="row flex-items-xs-center">
+					<div class="col-md-12 col-lg-8">
+						<ul class="media-list">
+							{{#each pagination.files}}
+								<li class="media mb-1" offline>
+									<div class="media-body media-middle">
+										<div class="media-heading h5">
+											<a ui-sref="blog.post({title: '{{pathjs 'basename' path}}'})">{{title}}</a>
+										</div>
+										<div class="subtitle h6">{{subtitle}}</div>
+									</div>
+									<div class="media-right media-middle hidden-sm-down">
+										<time class="time" datetime="{{moment date "YYYY-MM-DD"}}">{{moment date "MMM Do YYYY"}}</time>
+									</div>
+								</li>
+							{{/each}}
+						</ul>
+						{{#if (neq pagination.pages.length 1)}}
+							<nav class="text-xs-center">
+								<ul class="pagination pagination-sm">
+									<li class="page-item {{#unless pagination.previous}}disabled{{/unless}}">
+										{{#unless pagination.previous}}
+											<span class="page-link" aria-label="Previous">
+												<span aria-hidden="true">&laquo;</span>
+												<span class="sr-only">Previous</span>
+											</span>
+										{{/unless}}
+										{{#if pagination.previous}}
+											<a class="page-link"
+												aria-label="Previous"
+												{{#if (eq pagination.num 2)}}
+													ui-sref="blog"
+												{{else}}
+													ui-sref="blog.index({page: {{math pagination.num '-' 1}} })"
+												{{/if}}>
+												<span aria-hidden="true">&laquo;</span>
+												<span class="sr-only">Previous</span>
+											</a>
+										{{/if}}
+									</li>
+									<li class="page-item {{#unless pagination.next}}disabled{{/unless}}">
+										{{#unless pagination.next}}
+											<span class="page-link" aria-label="Next">
+												<span aria-hidden="true">&raquo;</span>
+												<span class="sr-only">Next</span>
+											</span>
+										{{/unless}}
+										{{#if pagination.next}}
+											<a class="page-link"
+												aria-label="Next"
+												ui-sref="blog.index({page: {{math pagination.num '+' 1}} })">
+												<span aria-hidden="true">&raquo;</span>
+												<span class="sr-only">Next</span>
+											</a>
+										{{/if}}
+									</li>
+								</ul>
+							</nav>
+						{{/if}}
+					</div>
+				</div>
+			</div>
+			<!-- END PARTIAL -->
+		</script>
+
+		{{>footer}}
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<header class="header">
+	<div class="menu menu--underbar nav-center">
+		<ul class="menu__list">
+			{{#each site.navigation}}
+				<li class="menu__item" ui-sref-active="menu__item--active">
+					<a ui-sref="{{{uiSref}}}" class="menu__link" title="{{text}}">{{text}}</a>
+				</li>
+			{{/each}}
+			<li class="menu__line"></li>
+		</ul>
+	</div>
+</header>

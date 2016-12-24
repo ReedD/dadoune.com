@@ -1,0 +1,42 @@
+{
+	"title": "dadoune.com",
+	"author": "Reed Dadoune",
+	"url": "https://dadoune.com/",
+	"locale": "en",
+	"navigation": [
+		{
+			"text": "Me",
+			"uiSref": "home"
+		},
+		{
+			"text": "Projects",
+			"uiSref": "page({name: 'projects'})"
+		},
+		{
+			"text": "Blog",
+			"uiSref": "blog"
+		}
+	],
+	"social": [
+		{
+			"link": "https://github.com/reedd",
+			"title": "Github",
+			"icon": "fa-github-alt"
+		},
+		{
+			"link": "http://stackoverflow.com/users/3322075/reedd",
+			"title": "Stack Overflow",
+			"icon": "fa-stack-overflow"
+		},
+		{
+			"link": "https://www.linkedin.com/in/reed-dadoune-a3604a91",
+			"title": "LinkedIn",
+			"icon": "fa-linkedin"
+		},
+		{
+			"link": "mailto:reed@dadoune.com",
+			"title": "Email",
+			"icon": "fa-envelope"
+		}
+	]
+}

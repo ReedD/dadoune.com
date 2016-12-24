@@ -1,0 +1,30 @@
+<footer class="footer p-1 text-muted">
+	<div class="container">
+		<div class="row flex-items-xs-center">
+			<div class="col-md-12 col-lg-8 text-xs-center">
+				<ul class="list-inline m-0">
+					{{#each site.social}}
+						<li class="list-inline-item mx-1">
+							<a class="icon" title="{{title}}" href="{{link}}">
+								<i class="fa {{icon}}"></i>
+							</a>
+						</li>
+					{{/each}}
+				</ul>
+				<small class="copyright">&copy; 2012-{{moment now "YYYY"}} Reed Dadoune</small>
+			</div>
+		</div>
+	</div>
+</footer>
+
+{{#if scripts}}
+	{{#each scripts}}
+		<script src="/{{this}}"></script>
+	{{/each}}
+{{/if}}
+
+{{#if site.ga}}
+	<script>
+		(function(s,i,m,p,l,e,r){s['GoogleAnalyticsObject']=l;s[l]=s[l]||function(){(s[l].q=s[l].q||[]).push(arguments)},s[l].l=1*new Date();e=i.createElement(m),r=i.getElementsByTagName(m)[0];e.async=1;e.src=p;r.parentNode.insertBefore(e,r)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','{{site.ga}}','auto');ga('send','pageview');
+	</script>
+{{/if}}

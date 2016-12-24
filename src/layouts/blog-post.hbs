@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{site.locale}}">
+{{>head}}
+
+<body>
+	<div class="container-fluid px-0 [[bodyClasses]]">
+
+		{{>header}}
+
+		<main class="main" role="main" ui-view="main"></main>
+		<script type="text/ng-template" id="partials/{{path}}/">
+			<!-- BEGIN PARTIAL partials/{{path}}/index.html -->
+			<article class="container">
+				<div class="row flex-items-xs-center">
+					<div class="col-md-12 col-lg-8">
+						<h1 class="h2">{{title}}</h1>
+						<h2 class="subtitle">{{subtitle}}</h2>
+						<div class="text-sm-right text-muted">
+							<time class="time" datetime="{{moment date "YYYY-MM-DD"}}">{{moment date "MMM Do YYYY"}}</time>
+						</div>
+						<hr>
+						<div class="content blog-post">
+
+							<div>
+								{{{contents}}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+			<!-- END PARTIAL -->
+		</script>
+
+		{{>footer}}
+
+	</div>
+</body>
+</html>
