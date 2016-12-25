@@ -18,5 +18,5 @@ phases:
       - yarn run build
   post_build:
     commands:
-      - aws s3 sync --exclude assets/* build/ "s3://${BUCKET_NAME}"
-      - aws s3 sync --cache-control "max-age=31536000" build/assets "s3://${BUCKET_NAME}/assets"
+      - aws s3 sync --delete --exclude assets/* build/ "s3://${BUCKET_NAME}"
+      - aws s3 sync --delete --cache-control "max-age=31536000" build/assets "s3://${BUCKET_NAME}/assets"
