@@ -13,6 +13,7 @@ const drafts      = require('metalsmith-drafts');
 const fingerprint = require('metalsmith-fingerprint-ignore');
 const fs          = require('fs');
 const htmlmin     = require('metalsmith-html-minifier');
+const imagemin    = require('metalsmith-imagemin')
 const layouts     = require('metalsmith-layouts');
 const markdown    = require('metalsmith-markdown');
 const marked      = require('marked');
@@ -73,6 +74,10 @@ metalsmith(path.join(__dirname))
 		outputDir: 'assets/css',
 		sourceMap: !production,
 		sourceMapContents: !production
+	}))
+	.use(imagemin({
+		jpegrecompress: {quality: 'medium'},
+		pngquant: {quality: '65-80'}
 	}))
 	.use(msif(
 		production,
