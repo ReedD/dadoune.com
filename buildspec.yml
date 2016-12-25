@@ -19,4 +19,4 @@ phases:
   post_build:
     commands:
       - aws s3 sync --exclude assets/* build/ "s3://${BUCKET_NAME}"
-      - aws s3 sync --expires "max-age=31536000" build/assets "s3://${BUCKET_NAME}/assets"
+      - aws s3 sync --cache-control "max-age=31536000" build/assets "s3://${BUCKET_NAME}/assets"
