@@ -1,0 +1,212 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Static Site Stack",
+	"Parameters": {
+		"GitHubOwner": {
+			"Description": "GitHub account username.",
+			"Type": "String"
+		},
+		"GitHubRepo": {
+			"Description": "Static site repo name.",
+			"Type": "String"
+		},
+		"GitHubBranch": {
+			"Description": "The branch that will trigger build/deploy.",
+			"Type": "String",
+			"Default": "master"
+		},
+		"GitHubOAuthToken": {
+			"Description": "OAuth or personal access token.",
+			"Type": "String",
+			"NoEcho": true
+		},
+		"S3ArtifactLocation": {
+			"Description": "S3 location for pipeline artifact storage.",
+			"Type": "String"
+		},
+		"StaticSiteBucketName": {
+			"Description": "The static site bucket.",
+			"Type": "String"
+		}
+	},
+	"Resources": {
+		"CodeBuildRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Statement": [{
+						"Sid": "",
+						"Effect": "Allow",
+						"Principal": {
+							"Service": ["codebuild.amazonaws.com"]
+						},
+						"Action": "sts:AssumeRole"
+					}]
+				},
+				"Path": "/"
+			}
+		},
+		"CodeBuildRolePolicy": {
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "CodeBuildRolePolicy",
+				"PolicyDocument": {
+					"Statement": [{
+						"Effect": "Allow",
+						"Resource": [
+							{"Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*"}
+						],
+						"Action": [
+							"logs:CreateLogGroup",
+							"logs:CreateLogStream",
+							"logs:PutLogEvents"
+						]
+					}, {
+						"Effect": "Allow",
+						"Resource": [
+							{"Fn::Sub": "arn:aws:s3:::${S3ArtifactLocation}"},
+							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucketName}"},
+							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucketName}/*"}
+						],
+						"Action": [
+							"s3:*"
+						]
+					}]
+				},
+				"Roles": [{"Ref": "CodeBuildRole"}]
+			}
+		},
+		"CodeBuild": {
+			"Type": "AWS::CodeBuild::Project",
+			"Properties": {
+				"Artifacts": {
+					"Type": "CODEPIPELINE"
+				},
+				"Environment": {
+					"ComputeType": "BUILD_GENERAL1_SMALL",
+					"Image": "aws/codebuild/ubuntu-base:14.04",
+					"Type": "LINUX_CONTAINER",
+					"EnvironmentVariables": [{
+						"Name": "BUCKET_NAME",
+						"Value": {"Ref": "StaticSiteBucketName"}
+					}]
+				},
+				"Name": {"Fn::Sub": "${AWS::StackName}-StaticSiteBuilder"},
+				"ServiceRole": {"Ref": "CodeBuildRole"},
+				"Source": {
+					"Type": "CODEPIPELINE"
+				},
+				"Tags": [{
+					"Key": "Stack",
+					"Value": {"Ref": "AWS::StackName"}
+				}],
+				"TimeoutInMinutes": 10
+			}
+		},
+		"CodePipelineRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Statement": [{
+						"Sid": "",
+						"Effect": "Allow",
+						"Principal": {
+							"Service": ["codepipeline.amazonaws.com"]
+						},
+						"Action": "sts:AssumeRole"
+					}]
+				},
+				"Path": "/"
+			}
+		},
+		"CodePipelineRolePolicy": {
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "CodePipelineRolePolicy",
+				"PolicyDocument": {
+					"Statement": [{
+						"Action": [
+							"s3:GetObject",
+							"s3:GetObjectVersion",
+							"s3:GetBucketVersioning"
+						],
+						"Resource": "*",
+						"Effect": "Allow"
+					}, {
+						"Action": [
+							"s3:PutObject"
+						],
+						"Resource": [
+							"arn:aws:s3:::codepipeline*"
+						],
+						"Effect": "Allow"
+					}, {
+						"Action": [
+							"codebuild:BatchGetBuilds",
+							"codebuild:StartBuild"
+						],
+						"Resource": "*",
+						"Effect": "Allow"
+					}]
+				},
+				"Roles": [{"Ref": "CodePipelineRole"}]
+			}
+		},
+		"CodePipeline": {
+			"Type": "AWS::CodePipeline::Pipeline",
+			"Properties": {
+				"RoleArn": {"Fn::GetAtt": ["CodePipelineRole", "Arn"] },
+				"Stages": [{
+					"Name": "Source",
+					"Actions": [{
+						"Name": "SourceAction",
+						"ActionTypeId": {
+							"Category": "Source",
+							"Owner": "ThirdParty",
+							"Version": "1",
+							"Provider": "GitHub"
+						},
+						"OutputArtifacts": [{
+							"Name": "StaticSiteSource"
+						}],
+						"Configuration": {
+							"Owner": {"Ref": "GitHubOwner"},
+							"Repo": {"Ref": "GitHubRepo"},
+							"Branch": {"Ref": "GitHubBranch"},
+							"OAuthToken": {"Ref": "GitHubOAuthToken"}
+						},
+						"RunOrder": 1
+					}]
+				}, {
+					"Name": "Build",
+					"Actions": [{
+						"Name": "CodeBuild",
+						"InputArtifacts": [{
+							"Name": "StaticSiteSource"
+						}],
+						"ActionTypeId": {
+							"Category": "Build",
+							"Owner": "AWS",
+							"Version": "1",
+							"Provider": "CodeBuild"
+						},
+						"OutputArtifacts": [{
+							"Name": "StaticSite"
+						}],
+						"Configuration": {
+							"ProjectName": {"Ref": "CodeBuild"}
+						},
+						"RunOrder": 1
+					}]
+				}],
+				"ArtifactStore": {
+					"Type": "S3",
+					"Location": {"Ref": "S3ArtifactLocation"}
+				}
+			}
+		}
+	},
+	"Outputs": {
+
+	}
+}
