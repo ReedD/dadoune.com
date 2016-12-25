@@ -109,6 +109,7 @@
 						"Effect": "Allow",
 						"Resource": [
 							{"Fn::Sub": "arn:aws:s3:::${S3ArtifactLocation}"},
+							{"Fn::Sub": "arn:aws:s3:::${S3ArtifactLocation}/*"},
 							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucketName}"},
 							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucketName}/*"}
 						],
