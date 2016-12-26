@@ -76,7 +76,7 @@ metalsmith(path.join(__dirname))
 		sourceMapContents: !production
 	}))
 	.use(imagemin({
-		jpegrecompress: {quality: 'medium'},
+		jpegrecompress: {quality: 'medium', method: 'ms-ssim'},
 		pngquant: {quality: '65-80'}
 	}))
 	.use(msif(
