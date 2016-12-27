@@ -31,8 +31,9 @@ const uglify      = require('metalsmith-uglify');
 // Custom
 const addScript        = require('./scripts/plugins/add-scripts');
 const addStyle         = require('./scripts/plugins/add-styles');
-const githubHelper     = require('./scripts/plugins/github-page-helper');
 const fingerprintMeta  = require('./scripts/plugins/fingerprint-meta');
+const githubHelper     = require('./scripts/plugins/github-page-helper');
+const inliner          = require('./scripts/plugins/inliner');
 const partialExtractor = require('./scripts/plugins/partial-extractor');
 const remove           = require('./scripts/plugins/remove');
 const replaceVersion   = require('./scripts/plugins/replace-version');
@@ -82,7 +83,7 @@ metalsmith(path.join(__dirname))
 	.use(msif(
 		production,
 		fingerprint({
-			pattern: ['**/css/*.css', '**/js/*.js', '**/*.svg', '**/*.jpg', '!**/fonts/*.svg']
+			pattern: ['**/css/*.css', '**/js/*.js', '**/*.jpg', '**/*.svg', '**/*.eot', '**/*.ttf', '**/*.woff', '**/*.woff2']
 		})
 	))
 	.use(githubHelper({
@@ -108,7 +109,7 @@ metalsmith(path.join(__dirname))
 			path: 'blog/:num/index.html'
 		}
 	}))
-	.use(addStyle())
+	// .use(addStyle())
 	.use(addScript())
 	.use(moveup({
 		pattern: 'content/**/*'
@@ -140,6 +141,7 @@ metalsmith(path.join(__dirname))
 		production,
 		fingerprintMeta()
 	))
+	.use(inliner())
 	.use(htmlmin({
 		removeAttributeQuotes: false,
 		processScripts: ['text/ng-template']

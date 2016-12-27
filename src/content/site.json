@@ -21,22 +21,22 @@
 		{
 			"link": "https://github.com/reedd",
 			"title": "Github",
-			"icon": "fa-github-alt"
+			"icon": "icon-github-circled"
 		},
 		{
 			"link": "http://stackoverflow.com/users/3322075/reedd",
 			"title": "Stack Overflow",
-			"icon": "fa-stack-overflow"
+			"icon": "icon-stackoverflow"
 		},
 		{
 			"link": "https://www.linkedin.com/in/reed-dadoune-a3604a91",
 			"title": "LinkedIn",
-			"icon": "fa-linkedin"
+			"icon": "icon-linkedin"
 		},
 		{
 			"link": "mailto:reed@dadoune.com",
 			"title": "Email",
-			"icon": "fa-envelope"
+			"icon": "icon-mail-alt"
 		}
 	]
 }

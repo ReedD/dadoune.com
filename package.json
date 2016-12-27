@@ -92,7 +92,6 @@
     "bootstrap": "4.0.0-alpha.5",
     "browserify": "^13.1.1",
     "eslint": "^3.12.2",
-    "font-awesome": "^4.7.0",
     "handlebars": "^4.0.5",
     "helper-moment": "^0.1.0",
     "lodash": "^4.17.3",
