@@ -16,8 +16,6 @@ const updateStaticCache = () => {
 			// These items must be cached for the
 			// Service Worker to complete installation
 			return cache.addAll([
-				'/assets/css/styles.css',
-				'/assets/fonts/fontawesome-webfont.woff2?v=4.7.0',
 				'/assets/js/bundle.js',
 				'/',
 				'/offline/',
