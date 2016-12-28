@@ -3,11 +3,11 @@
 {{>head}}
 
 <body>
-	<div class="container-fluid px-0 [[bodyClasses]]">
+	<div class="container-fluid px-0">
 
 		{{>header}}
 
-		<main class="main" role="main" ui-view="main"></main>
+		<main id="main" class="main" role="main" ui-view="main"></main>
 		<script type="text/ng-template" id="partials/{{path}}/">
 			<!-- BEGIN PARTIAL partials/{{path}}/index.html -->
 			{{{contents}}}
@@ -15,7 +15,7 @@
 		</script>
 
 		{{>footer}}
-
+		
 	</div>
 </body>
 </html>

@@ -17,6 +17,14 @@
 	</div>
 </footer>
 
+<script>
+	var partialContent = document.getElementById('partials/{{path}}/').innerHTML;
+	document.getElementById('main').innerHTML = partialContent;
+	{{#if bodyClasses}}document.body.classList.add('{{bodyClasses}}');{{/if}}
+	document.body.classList.add('[[bodyClasses]]');
+	window.bodyClasses = '{{bodyClasses}}';
+</script>
+
 {{#if scripts}}
 	{{#each scripts}}
 		<script async src="/{{this}}"></script>

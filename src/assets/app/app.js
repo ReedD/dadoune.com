@@ -79,12 +79,17 @@ angular
 
 	}])
 	.run(['$rootScope', '$state',  function ($rootScope, $state) {
+		angular.element(document.body).removeClass(window.bodyClasses);
+		$rootScope.bodyClasses = window.bodyClasses;
 		$rootScope.$on('$stateChangeSuccess', function (event, toState, toStateParams) {
+			let bodyClasses;
 			if (toState.name === 'page') {
-				$rootScope.bodyClasses = `${toState.name}-${toStateParams.name}`;
+				bodyClasses = `${toState.name}-${toStateParams.name}`;
 			} else {
-				$rootScope.bodyClasses = toState.name;
+				bodyClasses = toState.name;
 			}
+			bodyClasses = bodyClasses.replace('.', '-');
+			$rootScope.bodyClasses = bodyClasses;
 		});
 		$rootScope.$on('$stateNotFound', function () {
 			$state.go('404');
