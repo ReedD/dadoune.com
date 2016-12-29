@@ -292,6 +292,7 @@
 						"ViewerProtocolPolicy": "redirect-to-https"
 					},
 					"Enabled": true,
+					"HttpVersion": "http2",
 					"Origins": [{
 						"DomainName": {"Fn::Sub": ["${StaticSiteBucketName}.${Endpoint}", {
 							"Endpoint": {"Fn::FindInMap": ["S3WebsiteMap", {"Ref": "StaticSiteBucketRegion"}, "endpoint"]}}
