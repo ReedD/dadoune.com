@@ -117,6 +117,10 @@ metalsmith(path.join(__dirname))
 	.use(moveup({
 		pattern: 'content/**/*'
 	}))
+	.use(moveup({
+		pattern: 'assets/img/favicons/**/*',
+		by: 3
+	}))
 	.use(markdown({
 		breaks: true,
 		langPrefix: 'language-',
