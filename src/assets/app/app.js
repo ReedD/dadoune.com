@@ -3,6 +3,8 @@
 const angular = require('angular');
 const modules = [
 	require('angular-ui-router'),
+	require('angulartics'),
+	require('angulartics-google-analytics'),
 	require('./directives/gist'),
 	require('./directives/offline')
 ];

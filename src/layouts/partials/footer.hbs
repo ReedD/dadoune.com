@@ -31,8 +31,13 @@
 	{{/each}}
 {{/if}}
 
-{{#if site.ga}}
+{{#if site.analytics}}
 	<script>
-		(function(s,i,m,p,l,e,r){s['GoogleAnalyticsObject']=l;s[l]=s[l]||function(){(s[l].q=s[l].q||[]).push(arguments)},s[l].l=1*new Date();e=i.createElement(m),r=i.getElementsByTagName(m)[0];e.async=1;e.src=p;r.parentNode.insertBefore(e,r)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','{{site.ga}}','auto');ga('send','pageview');
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', '{{site.analytics}}', 'auto');
+		ga('send', 'pageview');
 	</script>
 {{/if}}

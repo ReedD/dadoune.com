@@ -85,6 +85,8 @@
   "dependencies": {
     "angular": "^1.6.0",
     "angular-ui-router": "^0.3.2",
+    "angulartics": "^1.3.0",
+    "angulartics-google-analytics": "^0.4.0",
     "autoprefixer": "^6.5.3",
     "axios": "^0.15.3",
     "babel-preset-es2015": "^6.18.0",
