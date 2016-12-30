@@ -4,7 +4,11 @@ subtitle: "A little update"
 date: 2014-03-23
 category: "code"
 draft: true
-tags: "Node.js, npm, assetmanager, MEAN Stack"
+tags:
+  - Node.js
+  - npm
+  - assetmanager
+  - MEAN Stack
 layout: blog-post.hbs
 ---
 

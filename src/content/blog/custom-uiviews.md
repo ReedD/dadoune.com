@@ -3,7 +3,9 @@ title: "Custom UIViews"
 subtitle: "A clean way to connect custom UIView classes with their corresponding xib files"
 date: 2014-02-18
 category: "code"
-tags: "Objective-C, UIView"
+tags:
+  - Objective-C
+  - UIView
 layout: blog-post.hbs
 ---
 

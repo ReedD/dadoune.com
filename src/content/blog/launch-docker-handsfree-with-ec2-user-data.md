@@ -3,7 +3,11 @@ title: "Launch Docker handsfree on AWS EC2 with Compose and user data"
 subtitle: "A helpful snippet"
 date: 2015-06-20
 category: "code"
-tags: "AWS, EC2, Docker, Compose"
+tags:
+  - AWS
+  - EC2
+  - Docker
+  - Compose
 layout: blog-post.hbs
 ---
 

@@ -3,7 +3,23 @@ title: "Best Thumbnailing Solution - Set up Thumbor on AWS"
 subtitle: "[Updated 5/26/15] How to set up a Thumbor image server on Amazon Web Services"
 date: 2014-04-20
 category: "code"
-tags: "AWS, Amazon Web Services, S3, EC2, Thumbor, Scaleability, Nginx, Supervisord, Load Balance, CloudFront, Thumbnail, Upload, pngcrush, jpegtran, gifsicle, image optimization"
+tags:
+  - AWS
+  - Amazon Web Services
+  - S3
+  - EC2
+  - Thumbor
+  - Scaleability
+  - Nginx
+  - Supervisord
+  - Load Balance
+  - CloudFront
+  - Thumbnail
+  - Upload
+  - pngcrush
+  - jpegtran
+  - gifsicle
+  - Image Optimization
 layout: blog-post.hbs
 ---
 

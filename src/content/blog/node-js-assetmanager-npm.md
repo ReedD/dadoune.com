@@ -3,7 +3,11 @@ title: "Node.js assetmanager npm"
 subtitle: "A new npm package"
 date: 2014-03-15
 category: "code"
-tags: "Node.js, npm, grunt, assetmanager"
+tags:
+  - Node.js
+  - npm
+  - grunt
+  - assetmanager
 layout: blog-post.hbs
 ---
 

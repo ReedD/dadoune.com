@@ -3,7 +3,12 @@ title: "Docker Ambassador"
 subtitle: "Micro docker for linking to external services"
 date: 2014-09-03
 category: "code"
-tags: "Docker, Socat, Ambassador, Busybox, Linux"
+tags:
+  - Docker
+  - Socat
+  - Ambassador
+  - Busybox
+  - Linux
 layout: blog-post.hbs
 ---
 
