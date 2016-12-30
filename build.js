@@ -54,7 +54,8 @@ metalsmith(path.join(__dirname))
 	.use(drafts())
 	.use(browserify('assets/js/bundle.js', [
 			'./src/assets/app/app.js',
-			'./src/assets/app/main.js'
+			// Only register service worker in production
+			production ? './src/assets/app/register-sw.js' : ''
 		], {
 			transform: [
 				['babelify', {presets: ['es2015']}]
