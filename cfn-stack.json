@@ -3,7 +3,7 @@
 	"Description": "Static Site Stack",
 	"Parameters": {
 		"DomainName": {
-			"Description": "The site domain name.",
+			"Description": "The site domain name (non www).",
 			"Type": "String",
 			"AllowedPattern": "(?!-)[a-zA-Z0-9-.]{1,63}(?<![.-])",
 			"ConstraintDescription": "Must be a valid domain name."
@@ -25,24 +25,10 @@
 			"Description": "OAuth or personal access token.",
 			"Type": "String",
 			"NoEcho": true
-		},
-		"S3ArtifactLocation": {
-			"Description": "S3 location for pipeline artifact storage.",
-			"Type": "String"
-		},
-		"StaticSiteBucketName": {
-			"Description": "The static site bucket.",
-			"Type": "String"
-		},
-		"StaticSiteBucketRegion": {
-			"Description": "The static site bucket.",
-			"Type": "String",
-			"Default": "us-east-1",
-			"AllowedValues": ["us-east-1", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ap-south-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "ap-northeast-1", "eu-central-1", "eu-west-1 ", "eu-west-2 ", "sa-east-1"]
 		}
 	},
-	"Mappings" : {
-		"S3WebsiteMap" : {
+	"Mappings": {
+		"S3WebsiteMap": {
 			"us-east-1":      {"endpoint": "s3-website-us-east-1.amazonaws.com"},
 			"us-east-2":      {"endpoint": "s3-website.us-east-2.amazonaws.com"},
 			"us-west-1":      {"endpoint": "s3-website-us-west-1.amazonaws.com"},
@@ -72,6 +58,30 @@
 					"DomainName": {"Fn::Sub": "www.${DomainName}"},
 					"ValidationDomain": {"Ref": "DomainName"}
 				}]
+			}
+		},
+		"WebAddress": {
+			"Type": "AWS::Route53::RecordSet",
+			"Properties": {
+				"AliasTarget": {
+					"HostedZoneId": "Z2FDTNDATAQYW2",
+					"DNSName": {"Fn::Sub": "${CloudFront.DomainName}"}
+				},
+				"HostedZoneName": {"Fn::Sub": "${DomainName}."},
+				"Name": {"Fn::Sub": "${DomainName}."},
+				"Type": "A"
+			}
+		},
+		"WWWWebAddress": {
+			"Type": "AWS::Route53::RecordSet",
+			"Properties": {
+				"AliasTarget": {
+					"HostedZoneId": "Z2FDTNDATAQYW2",
+					"DNSName": {"Fn::Sub": "${WWWCloudFront.DomainName}"}
+				},
+				"HostedZoneName": {"Fn::Sub": "${DomainName}."},
+				"Name": {"Fn::Sub": "www.${DomainName}."},
+				"Type": "A"
 			}
 		},
 		"CodeBuildRole": {
@@ -108,10 +118,10 @@
 					}, {
 						"Effect": "Allow",
 						"Resource": [
-							{"Fn::Sub": "arn:aws:s3:::${S3ArtifactLocation}"},
-							{"Fn::Sub": "arn:aws:s3:::${S3ArtifactLocation}/*"},
-							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucketName}"},
-							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucketName}/*"}
+							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}"},
+							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}/*"},
+							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}"},
+							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}/*"}
 						],
 						"Action": [
 							"s3:*"
@@ -133,7 +143,7 @@
 					"Type": "LINUX_CONTAINER",
 					"EnvironmentVariables": [{
 						"Name": "BUCKET_NAME",
-						"Value": {"Ref": "StaticSiteBucketName"}
+						"Value": {"Ref": "StaticSiteBucket"}
 					}]
 				},
 				"Name": {"Fn::Sub": "${AWS::StackName}-StaticSiteBuilder"},
@@ -182,7 +192,8 @@
 							"s3:PutObject"
 						],
 						"Resource": [
-							"arn:aws:s3:::codepipeline*"
+							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}"},
+							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}/*"}
 						],
 						"Effect": "Allow"
 					}, {
@@ -246,7 +257,52 @@
 				}],
 				"ArtifactStore": {
 					"Type": "S3",
-					"Location": {"Ref": "S3ArtifactLocation"}
+					"Location": {"Ref": "ArtifactBucket"}
+				}
+			}
+		},
+		"ArtifactBucket": {
+			"Type": "AWS::S3::Bucket",
+			"DeletionPolicy": "Delete",
+			"Properties": {
+				"AccessControl": "Private"
+			}
+		},
+		"RedirectBucket": {
+			"Type": "AWS::S3::Bucket",
+			"DeletionPolicy": "Delete",
+			"Properties": {
+				"AccessControl": "PublicRead",
+				"WebsiteConfiguration": {
+					"RedirectAllRequestsTo": {
+						"HostName": {"Fn::Sub": "www.${DomainName}"},
+						"Protocol": "https"
+					}
+				}
+			}
+		},
+		"StaticSiteBucketPolicy": {
+			"Type": "AWS::S3::BucketPolicy",
+			"Properties": {
+				"Bucket": {"Ref": "StaticSiteBucket"},
+				"PolicyDocument": {
+					"Statement":[{
+						"Action": ["s3:GetObject"],
+						"Effect": "Allow",
+						"Resource": {"Fn::Sub":"arn:aws:s3:::${StaticSiteBucket}/*"},
+						"Principal": "*"
+					}]
+				}
+			}
+		},
+		"StaticSiteBucket": {
+			"Type": "AWS::S3::Bucket",
+			"DeletionPolicy": "Retain",
+			"Properties": {
+				"AccessControl": "PublicRead",
+				"WebsiteConfiguration": {
+					"IndexDocument": "index.html",
+					"ErrorDocument": "404/index.html"
 				}
 			}
 		},
@@ -255,7 +311,50 @@
 			"Properties": {
 				"DistributionConfig": {
 					"Aliases": [
-						{"Ref": "DomainName"},
+						{"Ref": "DomainName"}
+					],
+					"CacheBehaviors": [],
+					"DefaultCacheBehavior": {
+						"AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+						"CachedMethods": ["HEAD", "GET", "OPTIONS"],
+						"Compress": true,
+						"TargetOriginId": "S3Bucket",
+						"ForwardedValues": {
+							"QueryString": false,
+							"Cookies": {"Forward": "none"},
+							"Headers": []
+						},
+						"DefaultTTL": 0,
+						"MinTTL": 0,
+						"MaxTTL": 31536000,
+						"SmoothStreaming": false,
+						"ViewerProtocolPolicy": "redirect-to-https"
+					},
+					"Enabled": true,
+					"HttpVersion": "http2",
+					"Origins": [{
+						"DomainName": {"Fn::Sub": ["${RedirectBucket}.${Endpoint}", {
+							"Endpoint": {"Fn::FindInMap": ["S3WebsiteMap", {"Ref": "AWS::Region"}, "endpoint"]}}
+						]},
+						"Id": "S3Bucket",
+						"CustomOriginConfig": {
+							"HTTPPort": 80,
+							"OriginProtocolPolicy": "http-only"
+						}
+					}],
+					"PriceClass": "PriceClass_All",
+					"ViewerCertificate": {
+						"SslSupportMethod": "sni-only",
+						"AcmCertificateArn": {"Ref": "SSLCertificate"}
+					}
+				}
+			}
+		},
+		"WWWCloudFront": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"Aliases": [
 						{"Fn::Sub": "www.${DomainName}"}
 					],
 					"CacheBehaviors": [{
@@ -294,8 +393,8 @@
 					"Enabled": true,
 					"HttpVersion": "http2",
 					"Origins": [{
-						"DomainName": {"Fn::Sub": ["${StaticSiteBucketName}.${Endpoint}", {
-							"Endpoint": {"Fn::FindInMap": ["S3WebsiteMap", {"Ref": "StaticSiteBucketRegion"}, "endpoint"]}}
+						"DomainName": {"Fn::Sub": ["${StaticSiteBucket}.${Endpoint}", {
+							"Endpoint": {"Fn::FindInMap": ["S3WebsiteMap", {"Ref": "AWS::Region"}, "endpoint"]}}
 						]},
 						"Id": "S3Bucket",
 						"CustomOriginConfig": {
@@ -306,13 +405,12 @@
 					"PriceClass": "PriceClass_All",
 					"ViewerCertificate": {
 						"SslSupportMethod": "sni-only",
-						"AcmCertificateArn": {"Ref" : "SSLCertificate"}
+						"AcmCertificateArn": {"Ref": "SSLCertificate"}
 					}
 				}
 			}
 		}
 	},
 	"Outputs": {
-
 	}
 }
