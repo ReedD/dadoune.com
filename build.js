@@ -16,7 +16,6 @@ const htmlmin     = require('metalsmith-html-minifier');
 const imagemin    = require('metalsmith-imagemin');
 const layouts     = require('metalsmith-layouts');
 const markdown    = require('metalsmith-markdown');
-const marked      = require('marked');
 const metalsmith  = require('metalsmith');
 const moveup      = require('metalsmith-move-up');
 const msif        = require('metalsmith-if');
@@ -36,6 +35,7 @@ const githubHelper     = require('./scripts/plugins/github-page-helper');
 const inliner          = require('./scripts/plugins/inliner');
 const partialExtractor = require('./scripts/plugins/partial-extractor');
 const remove           = require('./scripts/plugins/remove');
+const renderer         = require('./scripts/plugins/markdown-renderer');
 const replaceVersion   = require('./scripts/plugins/replace-version');
 const sassAutoprefixer = require('./scripts/plugins/sass-autoprefixer');
 
@@ -125,7 +125,7 @@ metalsmith(path.join(__dirname))
 	.use(markdown({
 		breaks: true,
 		langPrefix: 'language-',
-		renderer: new marked.Renderer()
+		renderer: renderer
 	}))
 	.use(prism())
 	.use(permalinks({
