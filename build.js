@@ -60,7 +60,13 @@ metalsmith(path.join(__dirname))
 			transform: [
 				['babelify', {presets: ['es2015']}]
 			],
-			debug: !production
+			debug: !production,
+			insertGlobalVars: {
+				__disqusShortName: function(file, dir) {
+					const site = require(path.join(__dirname, 'src/content/site.json'));
+					return `'${site.disqus}'`;
+				}
+			}
 		}
 	))
 	.use(replaceVersion())

@@ -8,6 +8,7 @@
 		{{>header}}
 
 		<main id="main" class="main" role="main" ui-view="main"></main>
+
 		<script type="text/ng-template" id="partials/{{path}}/">
 			<!-- BEGIN PARTIAL partials/{{path}}/index.html -->
 			<article class="container">
@@ -20,10 +21,12 @@
 						</div>
 						<hr>
 						<div class="content blog-post">
-
 							<div>
 								{{{contents}}}
 							</div>
+							{{#if site.disqus}}
+								<disqus />
+							{{/if}}
 						</div>
 					</div>
 				</div>

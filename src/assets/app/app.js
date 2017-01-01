@@ -6,6 +6,7 @@ const modules = [
 	require('angulartics'),
 	require('angulartics-google-analytics'),
 	require('./directives/gist'),
+	require('./directives/disqus'),
 	require('./directives/offline')
 ];
 
@@ -17,6 +18,9 @@ angular
 			$interpolateProvider.startSymbol('[[').endSymbol(']]');
 		}
 	])
+	.config(['disqusProvider', function (disqusProvider) {
+		disqusProvider.setShortName(__disqusShortName);
+	}])
 	.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 
 		// 404
