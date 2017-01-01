@@ -4,6 +4,7 @@
 	"url": "https://dadoune.com/",
 	"locale": "en",
 	"analytics": "UA-48078670-1",
+	"disqus": "dadoune",
 	"navigation": [
 		{
 			"text": "Me",
