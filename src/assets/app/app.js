@@ -5,8 +5,8 @@ const modules = [
 	require('angular-ui-router'),
 	require('angulartics'),
 	require('angulartics-google-analytics'),
+	require('angular-disqus-comments'),
 	require('./directives/gist'),
-	require('./directives/disqus'),
 	require('./directives/offline')
 ];
 
@@ -18,8 +18,8 @@ angular
 			$interpolateProvider.startSymbol('[[').endSymbol(']]');
 		}
 	])
-	.config(['disqusProvider', function (disqusProvider) {
-		disqusProvider.setShortName(__disqusShortName);
+	.config(['disqusCommentsProvider', function (disqusProvider) {
+		disqusProvider.shortName = __disqusShortName;
 	}])
 	.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 

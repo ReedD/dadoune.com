@@ -36,7 +36,6 @@ const inliner          = require('./scripts/plugins/inliner');
 const partialExtractor = require('./scripts/plugins/partial-extractor');
 const remove           = require('./scripts/plugins/remove');
 const renderer         = require('./scripts/plugins/markdown-renderer');
-const replaceVersion   = require('./scripts/plugins/replace-version');
 const sassAutoprefixer = require('./scripts/plugins/sass-autoprefixer');
 
 const production = (process.env.NODE_ENV === 'production');
@@ -62,14 +61,17 @@ metalsmith(path.join(__dirname))
 			],
 			debug: !production,
 			insertGlobalVars: {
+				__siteVersion: function(file, dir) {
+					const sitePackage = require('./package.json');
+					return `'${sitePackage.version}'`;
+				},
 				__disqusShortName: function(file, dir) {
-					const site = require(path.join(__dirname, 'src/content/site.json'));
+					const site = require('./src/content/site.json');
 					return `'${site.disqus}'`;
 				}
 			}
 		}
 	))
-	.use(replaceVersion())
 	.use(msif(
 		production,
 		uglify({

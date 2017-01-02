@@ -87,6 +87,10 @@ amdefine@>=0.0.4:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
 
+angular-disqus-comments@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/angular-disqus-comments/-/angular-disqus-comments-1.0.1.tgz#24886bdcf10f6f1cc035171aa7ad951604e85c93"
+
 angular-ui-router@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.3.2.tgz#c27e0496309c99218d5655985b164a096ab520a9"
