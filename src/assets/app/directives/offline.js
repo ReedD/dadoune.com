@@ -14,7 +14,7 @@ angular
 		function ($window)  {
 			function getCache () {
 				return $window.caches
-					.open(`v${__siteVersion}::pages`)
+					.open('v' + __siteVersion + '::pages')
 					.then(cache => {
 						return cache.keys();
 					})
