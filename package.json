@@ -1,6 +1,6 @@
 {
   "name": "dadoune.com",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Static site generator for dadoune.com",
   "homepage": "http://dadoune.com",
   "scripts": {
