@@ -74,6 +74,19 @@ metalsmith(path.join(__dirname))
 	))
 	.use(msif(
 		production,
+		browserify('service-worker.js', [
+			'./src/service-worker.js'
+		], {
+			insertGlobalVars: {
+				__siteVersion: function(file, dir) {
+					const sitePackage = require('./package.json');
+					return `'${sitePackage.version}'`;
+				}
+			}
+		}
+	)))
+	.use(msif(
+		production,
 		uglify({
 			nameTemplate: '[name].[ext]',
 			filter: ['assets/js/bundle.js']
