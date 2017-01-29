@@ -16,7 +16,7 @@ As I discussed in a previous blog [Preload AngularJS Templates](/blog/angular-ui
 
 1. Convert Markdown into HTML
 2. Inject the HTML from step 1 into a Handlebar template
-3. Extract the partial from HTML rendered in step 2
+3. Extract the partial from the HTML rendered in step 2
 4. Save the result from step 3 into it's own file
 
 The Handlebar template looks like this:
