@@ -4,7 +4,7 @@ subtitle: "A helpful snippet"
 date: 2015-06-20
 category: "code"
 tags:
-  - AWS
+  - Amazon Web Services
   - EC2
   - Docker
   - Compose

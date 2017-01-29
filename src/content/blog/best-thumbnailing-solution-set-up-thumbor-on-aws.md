@@ -4,7 +4,6 @@ subtitle: "[Updated 5/26/15] How to set up a Thumbor image server on Amazon Web 
 date: 2014-04-20
 category: "code"
 tags:
-  - AWS
   - Amazon Web Services
   - S3
   - EC2

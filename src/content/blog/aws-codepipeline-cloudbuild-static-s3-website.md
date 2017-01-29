@@ -4,7 +4,7 @@ subtitle: "Use GitHub to trigger AWS CodePipeline and CodeBuild to generate your
 date: 2017-01-02
 category: "code"
 tags:
-  - AWS
+  - Amazon Web Services
   - CodePipeline
   - CodeBuild
   - CloudFormation

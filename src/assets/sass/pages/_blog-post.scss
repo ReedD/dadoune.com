@@ -1,6 +1,29 @@
 
 .blog-post {
 
+	.tags {
+		overflow: hidden;
+
+		.list-inline {
+			margin-left: -1px;
+		}
+
+		.list-inline-item {
+			border-left: solid $border-width $hr-border-color;
+			display: inline-block;
+			flex-basis: auto;
+			flex-grow: 1;
+			margin: .25rem 0;
+			padding: 0 .25rem;
+			text-align: center;
+
+			// scss-lint:disable SelectorDepth NestingDepth
+			:not(:last-child) {
+				margin-right: 0;
+			}
+		}
+	}
+
 	.comments {
 		margin-top: 2rem;
 	}

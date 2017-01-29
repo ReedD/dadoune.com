@@ -3,8 +3,6 @@ title: "Welcome to my blog!"
 subtitle: "An introduction to me"
 date: 2014-02-17
 category: "code"
-tags:
-  - Welcome
 layout: blog-post.hbs
 ---
 

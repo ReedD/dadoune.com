@@ -51,6 +51,7 @@
     "metalsmith-permalinks": "^0.5.0",
     "metalsmith-prism": "^3.0.2",
     "metalsmith-sass": "^1.4.0",
+    "metalsmith-tags": "^2.0.0",
     "metalsmith-uglify": "^1.5.1",
     "minimatch": "^3.0.3",
     "multimatch": "^2.1.0",

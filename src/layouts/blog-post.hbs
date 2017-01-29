@@ -20,6 +20,17 @@
 							<time class="time" datetime="{{moment date "YYYY-MM-DD"}}">{{moment date "MMM Do YYYY"}}</time>
 						</div>
 						<hr>
+						{{#if tags.length}}
+							<div class="tags">
+								<ul class="list-inline d-flex justify-content-center flex-wrap">
+									{{#each tags}}
+										<li class="list-inline-item">
+											<a ui-sref="blog.tag({tag: '{{slug}}'})">{{name}}</a>
+										</li>
+									{{/each}}
+								</ul>
+							</div>
+						{{/if}}
 						<div class="content blog-post">
 							<div>
 								{{{contents}}}

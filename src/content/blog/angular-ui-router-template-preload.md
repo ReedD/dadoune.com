@@ -79,7 +79,7 @@ Compacted, our HTML looks something like this now:
 ```
 [View Source](https://github.com/ReedD/dadoune.com/blob/758c199f03509ea4a3a8fdd02954d6e5b69f7b85/src/layouts/page.hbs)
 
-<p class="alert alert-info">**Side Note:** Compacting our initial page load and serving additional pages via partials means we have to generate our content in two forms. Given that this is a static site, this creates a new challenge which I address in [this blog](/blog/angular-ui-router-template-preload/metalsmith-angularjs-partial-extractor).</p>
+<p class="alert alert-info">**Side Note:** Compacting our initial page load and serving additional pages via partials means we have to generate our content in two forms. Given that this is a static site, this creates a new challenge which I address in <a ui-sref="blog.post({title: 'metalsmith-angularjs-partial-extractor'})">this blog</a>.</p>
 
 Cool so now every thing is perfect right? Wrong. When we run it through Google Page Speed this is what it says:
 
