@@ -29,7 +29,7 @@ const uglify      = require('metalsmith-uglify');
 
 // Custom
 const addScript        = require('./scripts/plugins/add-scripts');
-const addStyle         = require('./scripts/plugins/add-styles');
+// const addStyle         = require('./scripts/plugins/add-styles');
 const fingerprintMeta  = require('./scripts/plugins/fingerprint-meta');
 const githubHelper     = require('./scripts/plugins/github-page-helper');
 const inliner          = require('./scripts/plugins/inliner');
@@ -63,11 +63,11 @@ metalsmith(path.join(__dirname))
 				['babelify', {presets: ['es2015']}]
 			],
 			insertGlobalVars: {
-				__siteVersion: function(file, dir) {
+				__siteVersion: (file, dir) => {
 					const sitePackage = require('./package.json');
 					return `'${sitePackage.version}'`;
 				},
-				__disqusShortName: function(file, dir) {
+				__disqusShortName: (file, dir) => {
 					const site = require('./src/content/site.json');
 					return `'${site.disqus}'`;
 				}
@@ -82,7 +82,7 @@ metalsmith(path.join(__dirname))
 				'./src/service-worker.js'
 			],
 			insertGlobalVars: {
-				__siteVersion: function(file, dir) {
+				__siteVersion: (file, dir) => {
 					const sitePackage = require('./package.json');
 					return `'${sitePackage.version}'`;
 				}

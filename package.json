@@ -23,6 +23,10 @@
       "es6": true
     },
     "extends": "eslint:recommended",
+    "globals": {
+      "__disqusShortName": true,
+      "__siteVersion": true
+    },
     "rules": {
       "quote-props": [
         "warn",
@@ -69,6 +73,13 @@
         "error",
         {
           "allowParens": true
+        }
+      ],
+      "no-console": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          "args": "none"
         }
       ],
       "spaced-comment": [

@@ -20,7 +20,7 @@ module.exports = () => {
 					const inlineContents = inlineFile.contents.toString();
 					contents = contents.replace(fullMatch, inlineContents);
 				}
-				data.contents = new Buffer(contents)
+				data.contents = new Buffer(contents);
 			}
 		});
 
