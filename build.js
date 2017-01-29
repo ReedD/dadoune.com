@@ -51,15 +51,17 @@ metalsmith(path.join(__dirname))
 		});
 	})
 	.use(drafts())
-	.use(browserify('assets/js/bundle.js', [
-			'./src/assets/app/app.js',
-			// Only register service worker in production
-			production ? './src/assets/app/register-sw.js' : ''
-		], {
+	.use(browserify({
+			dest: 'assets/js/bundle.js',
+			entries: [
+				'./src/assets/app/app.js',
+				// Only register service worker in production
+				production ? './src/assets/app/register-sw.js' : ''
+			],
+			sourcemaps: !production,
 			transform: [
 				['babelify', {presets: ['es2015']}]
 			],
-			debug: !production,
 			insertGlobalVars: {
 				__siteVersion: function(file, dir) {
 					const sitePackage = require('./package.json');
@@ -74,9 +76,11 @@ metalsmith(path.join(__dirname))
 	))
 	.use(msif(
 		production,
-		browserify('service-worker.js', [
-			'./src/service-worker.js'
-		], {
+		browserify({
+			dest: 'service-worker.js',
+			entries: [
+				'./src/service-worker.js'
+			],
 			insertGlobalVars: {
 				__siteVersion: function(file, dir) {
 					const sitePackage = require('./package.json');

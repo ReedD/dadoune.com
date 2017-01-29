@@ -11,25 +11,25 @@
 		<script type="text/ng-template" id="partials/{{path}}/">
 			<!-- BEGIN PARTIAL partials/{{path}}/index.html -->
 			<div class="container">
-				<div class="row flex-items-xs-center">
+				<div class="row justify-content-center">
 					<div class="col-md-12 col-lg-8">
-						<ul class="media-list">
+						<ul class="list-unstyled">
 							{{#each pagination.files}}
-								<li class="media mb-1" offline>
-									<div class="media-body media-middle">
+								<li class="media mb-3" offline>
+									<div class="media-body align-self-center">
 										<div class="media-heading h5">
 											<a ui-sref="blog.post({title: '{{pathjs 'basename' path}}'})">{{title}}</a>
 										</div>
 										<div class="subtitle h6">{{subtitle}}</div>
 									</div>
-									<div class="media-right media-middle hidden-sm-down">
+									<div class="media-right align-self-center hidden-sm-down">
 										<time class="time" datetime="{{moment date "YYYY-MM-DD"}}">{{moment date "MMM Do YYYY"}}</time>
 									</div>
 								</li>
 							{{/each}}
 						</ul>
 						{{#if (neq pagination.pages.length 1)}}
-							<nav class="text-xs-center">
+							<nav class="text-center">
 								<ul class="pagination pagination-sm">
 									<li class="page-item {{#unless pagination.previous}}disabled{{/unless}}">
 										{{#unless pagination.previous}}
