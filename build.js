@@ -120,7 +120,7 @@ metalsmith(path.join(__dirname))
 		path: 'content/projects.html',
 		layout: 'projects-index.hbs',
 		endpoints: {
-			repos: '/users/reedd/repos?type=owner&sort=updated'
+			repos: '/users/reedd/repos?type=owner&sort=pushed'
 		}
 	}))
 	.use(collections({
