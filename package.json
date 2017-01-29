@@ -8,7 +8,8 @@
     "build": "rm -rf build/ && NODE_ENV=production node build.js",
     "lint": "node_modules/eslint/bin/eslint.js --ignore-path .gitignore .",
     "depcheck": "depcheck --ignores=eslint,babelify,babel-preset-es2015,handlebars .",
-    "test": "npm run depcheck && npm run lint"
+    "pre-commit": "pre-commit run --all-files",
+    "test": "yarn run depcheck && yarn run lint && yarn run pre-commit"
   },
   "author": "Reed Dadoune <reed@dadoune.com>",
   "private": true,
