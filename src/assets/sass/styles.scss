@@ -4,23 +4,23 @@
 
 // Vendors
 // Core variables and mixins
-@import "../../../node_modules/bootstrap/scss/variables";
-@import "../../../node_modules/bootstrap/scss/mixins";
+@import '../../../node_modules/bootstrap/scss/variables';
+@import '../../../node_modules/bootstrap/scss/mixins';
 // Reset and dependencies
-@import "../../../node_modules/bootstrap/scss/normalize";
-@import "../../../node_modules/bootstrap/scss/print";
+@import '../../../node_modules/bootstrap/scss/normalize';
+@import '../../../node_modules/bootstrap/scss/print';
 // Core CSS
-@import "../../../node_modules/bootstrap/scss/reboot";
-@import "../../../node_modules/bootstrap/scss/type";
-@import "../../../node_modules/bootstrap/scss/images";
-@import "../../../node_modules/bootstrap/scss/code";
-@import "../../../node_modules/bootstrap/scss/grid";
+@import '../../../node_modules/bootstrap/scss/reboot';
+@import '../../../node_modules/bootstrap/scss/type';
+@import '../../../node_modules/bootstrap/scss/images';
+@import '../../../node_modules/bootstrap/scss/code';
+@import '../../../node_modules/bootstrap/scss/grid';
 // Components
-@import "../../../node_modules/bootstrap/scss/pagination";
-@import "../../../node_modules/bootstrap/scss/alert";
-@import "../../../node_modules/bootstrap/scss/media";
+@import '../../../node_modules/bootstrap/scss/pagination';
+@import '../../../node_modules/bootstrap/scss/alert';
+@import '../../../node_modules/bootstrap/scss/media';
 // Utility classes
-@import "../../../node_modules/bootstrap/scss/utilities";
+@import '../../../node_modules/bootstrap/scss/utilities';
 
 // Custom Vendors
 @import 'vendors/fontello';

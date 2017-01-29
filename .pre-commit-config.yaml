@@ -1,0 +1,17 @@
+-   repo: https://github.com/pre-commit/pre-commit-hooks.git
+    sha: v0.7.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-merge-conflict
+    -   id: check-json
+    -   id: check-yaml
+    -   id: check-symlinks
+-   repo: git://github.com/pre-commit/mirrors-eslint
+    sha: v3.14.0
+    hooks:
+    -   id: eslint
+-   repo: git://github.com/pre-commit/mirrors-scss-lint
+    sha: 'v0.52.0'
+    hooks:
+    -   id: scss-lint

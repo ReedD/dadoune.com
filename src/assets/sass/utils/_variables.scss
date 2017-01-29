@@ -2,7 +2,7 @@
 // Similar colors should use the `tint` and `shade` functions when possible.
 // For color naming conventions see http://davidwalsh.name/sass-color-variables-dont-suck
 
-$black:   hsl(0,     0%,   0%);
-$white:   hsl(0,     0%, 100%);
+$black: hsl(0, 0%, 0%);
+$white: hsl(0, 0%, 100%);
 
 $menu-break-width: 365px;

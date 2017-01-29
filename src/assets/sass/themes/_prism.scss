@@ -1,31 +1,30 @@
-/**
- * okaidia theme for JavaScript, CSS and HTML
- * Loosely based on Monokai textmate theme by http://www.monokai.nl/
- * @author ocodia
- */
+// okaidia theme for JavaScript, CSS and HTML
+// Loosely based on Monokai textmate theme by http://www.monokai.nl/
+// @author ocodia
+// scss-lint:disable ColorVariable QualifyingElement
 
 code[class*="language-"],
 pre[class*="language-"] {
-	color: #f8f8f2;
 	background: none;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	color: #f8f8f2;
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;
+	hyphens: none;
 	line-height: 1.5;
 	tab-size: 4;
-	hyphens: none;
+	text-align: left;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	white-space: pre;
+	word-break: normal;
+	word-spacing: normal;
+	word-wrap: normal;
 }
 
-/* Code blocks */
+// Code blocks
 pre[class*="language-"] {
-	padding: 1em;
+	border-radius: 0.3em;
 	margin: .5em 0;
 	overflow: auto;
-	border-radius: 0.3em;
+	padding: 1em;
 }
 
 :not(pre) > code[class*="language-"],
@@ -33,10 +32,10 @@ pre[class*="language-"] {
 	background: #272822;
 }
 
-/* Inline code */
+// Inline code
 :not(pre) > code[class*="language-"] {
-	padding: .1em;
 	border-radius: .3em;
+	padding: .1em;
 	white-space: normal;
 }
 
@@ -44,7 +43,7 @@ pre[class*="language-"] {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-	color: slategray;
+	color: #708090;
 }
 
 .token.punctuation {
@@ -105,6 +104,7 @@ pre[class*="language-"] {
 .token.bold {
 	font-weight: bold;
 }
+
 .token.italic {
 	font-style: italic;
 }

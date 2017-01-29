@@ -17,7 +17,7 @@ I've been doing a lot of research and experimentation with docker and I'm really
 Here is an example of how to use the ambassador:
 
 ```bash
-docker run -t -i \  
+docker run -t -i \
 	-name redis_ambassador \
 	-expose 6379 \
 	-e REDIS_PORT_6379_TCP=tcp://<DOMAIN OR IP ADDRESS>:6379 \

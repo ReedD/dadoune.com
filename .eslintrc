@@ -1,0 +1,77 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+    "__disqusShortName": true,
+    "__siteVersion": true
+  },
+  "rules": {
+    "quote-props": [
+      "warn",
+      "as-needed"
+    ],
+    "no-labels": "error",
+    "comma-dangle": [
+      "warn",
+      "never"
+    ],
+    "no-empty-character-class": [
+      "error"
+    ],
+    "object-curly-spacing": [
+      "warn",
+      "never"
+    ],
+    "semi": ["error", "always"],
+    "semi-spacing": [
+      "warn",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "keyword-spacing": [
+      "warn",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "space-unary-ops": [
+      "warn",
+      {
+        "words": true,
+        "nonwords": false
+      }
+    ],
+    "strict": [
+      "error",
+      "global"
+    ],
+    "no-confusing-arrow": [
+      "error",
+      {
+        "allowParens": true
+      }
+    ],
+    "no-console": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ],
+    "spaced-comment": [
+      "warn",
+      "always"
+    ],
+    "space-before-function-paren": [
+      "warn",
+      "always"
+    ]
+  }
+}

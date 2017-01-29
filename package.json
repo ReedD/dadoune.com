@@ -1,6 +1,6 @@
 {
   "name": "dadoune.com",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Static site generator for dadoune.com",
   "homepage": "http://dadoune.com",
   "scripts": {
@@ -8,79 +8,14 @@
     "build": "rm -rf build/ && NODE_ENV=production node build.js",
     "lint": "node_modules/eslint/bin/eslint.js --ignore-path .gitignore .",
     "depcheck": "depcheck --ignores=eslint,babelify,babel-preset-es2015,handlebars .",
-    "test": "npm run depcheck && npm run lint"
+    "pre-commit": "pre-commit run --all-files",
+    "test": "yarn run depcheck && yarn run lint && yarn run pre-commit"
   },
   "author": "Reed Dadoune <reed@dadoune.com>",
   "private": true,
   "license": "MIT",
   "engines": {
     "node": ">=4.0.0"
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
-      "quote-props": [
-        "warn",
-        "as-needed"
-      ],
-      "no-labels": "error",
-      "comma-dangle": [
-        "warn",
-        "never"
-      ],
-      "no-empty-character-class": [
-        "error"
-      ],
-      "object-curly-spacing": [
-        "warn",
-        "never"
-      ],
-      "semi-spacing": [
-        "warn",
-        {
-          "before": false,
-          "after": true
-        }
-      ],
-      "keyword-spacing": [
-        "warn",
-        {
-          "before": true,
-          "after": true
-        }
-      ],
-      "space-unary-ops": [
-        "warn",
-        {
-          "words": true,
-          "nonwords": false
-        }
-      ],
-      "strict": [
-        "error",
-        "global"
-      ],
-      "no-confusing-arrow": [
-        "error",
-        {
-          "allowParens": true
-        }
-      ],
-      "spaced-comment": [
-        "warn",
-        "always"
-      ],
-      "semi": 1,
-      "space-before-function-paren": [
-        "warn",
-        "always"
-      ]
-    }
   },
   "dependencies": {
     "angular": "^1.6.1",
@@ -122,5 +57,12 @@
     "postcss": "^5.2.11",
     "postcss-scss": "^0.4.0",
     "prismjs": "^1.6.0"
+  },
+  "devDependencies": {
+    "bluebird": "^3.4.7",
+    "nodegit": "^0.16.0",
+    "nodegit-flow": "^0.3.0",
+    "semver": "^5.3.0",
+    "yargs": "^6.6.0"
   }
 }

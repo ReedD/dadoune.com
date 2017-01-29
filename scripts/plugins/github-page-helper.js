@@ -8,10 +8,10 @@ const github = axios.create({
 
 module.exports = (opts) => {
 	if (!opts.path) {
-		throw new Error(`Missing 'page' key.`)
+		throw new Error(`Missing 'page' key.`);
 	}
 	if (!opts.layout) {
-		throw new Error(`Missing 'layout' key.`)
+		throw new Error(`Missing 'layout' key.`);
 	}
 	return (files, metalsmith, done) => {
 		if (files[opts.path]) {

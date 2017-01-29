@@ -300,7 +300,7 @@ We also need to add some S3 config variables so that our loader knows how to con
 ## https://github.com/willtrking/thumbor_aws.git
 
 AWS_ACCESS_KEY   = '<INSER READ-ONLY USER ACCESS KEY>'
-AWS_SECRET_KEY   = '<INSER READ-ONLY USER SECRET KEY>'  
+AWS_SECRET_KEY   = '<INSER READ-ONLY USER SECRET KEY>'
 S3_LOADER_BUCKET = '<INSERT BUCKET NAME>'
 
 # The following keys aren't needed
@@ -327,7 +327,7 @@ Then paste the following into a file titled `supervisord`.
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Supervisor init script
-# Description:       Supervisor init script    
+# Description:       Supervisor init script
 ### END INIT INFO
 
 # Supervisord auto-start
@@ -378,13 +378,13 @@ Now that we have supervisor installed, we need to add the config file that's goi
 file=/tmp/supervisor.sock   ; (the path to the socket file)
 
 [supervisord]
-logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)  
-logfile_maxbytes=50MB        ; (max main logfile bytes b4 rotation;default 50MB)  
-logfile_backups=10           ; (num of main logfile rotation backups;default 10)  
-loglevel=info                ; (log level;default info; others: debug,warn,trace)  
-pidfile=/tmp/supervisord.pid ; (supervisord pidfile;default supervisord.pid)  
-nodaemon=false               ; (start in foreground if true;default false)  
-minfds=1024                  ; (min. avail startup file descriptors;default 1024)  
+logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)
+logfile_maxbytes=50MB        ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=10           ; (num of main logfile rotation backups;default 10)
+loglevel=info                ; (log level;default info; others: debug,warn,trace)
+pidfile=/tmp/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+nodaemon=false               ; (start in foreground if true;default false)
+minfds=1024                  ; (min. avail startup file descriptors;default 1024)
 minprocs=200                 ; (min. avail process descriptors;default 200)
 
 ; the below section must remain in the config file for RPC
@@ -401,19 +401,19 @@ serverurl=unix:///tmp/supervisor.sock ; use a unix:// URL  for a unix socket
 ; processes, however we want the same setup for each so that isn't necessary
 ; command=thumbor --ip=127.0.0.1 --port=800%(process_num)s --conf=/etc/thumbor800%(process_num)s.conf
 ; Instead we'll use this command to use just the one conf file
-command=/usr/local/bin/thumbor --ip=127.0.0.1 --port=800%(process_num)s --conf=/etc/thumbor.conf  
-process_name=thumbor800%(process_num)s  
-numprocs=4  
-autostart=true  
-autorestart=true  
-startretries=3  
-stopsignal=TERM  
+command=/usr/local/bin/thumbor --ip=127.0.0.1 --port=800%(process_num)s --conf=/etc/thumbor.conf
+process_name=thumbor800%(process_num)s
+numprocs=4
+autostart=true
+autorestart=true
+startretries=3
+stopsignal=TERM
 ; Output logs for each of our processes
-stdout_logfile=/var/log/thumbor.stdout.log  
-stdout_logfile_maxbytes=1MB  
-stdout_logfile_backups=10  
-stderr_logfile=/var/log/thumbor.stderr.log  
-stderr_logfile_maxbytes=1MB  
+stdout_logfile=/var/log/thumbor.stdout.log
+stdout_logfile_maxbytes=1MB
+stdout_logfile_backups=10
+stderr_logfile=/var/log/thumbor.stderr.log
+stderr_logfile_maxbytes=1MB
 stderr_logfile_backups=10
 
 ```
