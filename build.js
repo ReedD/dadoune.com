@@ -25,6 +25,7 @@ const prism       = require('metalsmith-prism');
                     require('prismjs/components/prism-c');
                     require('prismjs/components/prism-objectivec');
 const sass        = require('metalsmith-sass');
+const tags        = require('metalsmith-tags');
 const uglify      = require('metalsmith-uglify');
 
 // Custom
@@ -137,6 +138,15 @@ metalsmith(path.join(__dirname))
 			first: 'blog/index.html',
 			path: 'blog/:num/index.html'
 		}
+	}))
+	.use(tags({
+		handle: 'tags',
+		path:'blog/tag/:tag/index.html',
+		layout:'blog-index.hbs',
+		sortBy: 'date',
+		reverse: true,
+		skipMetadata: false,
+		slug: {mode: 'rfc3986'}
 	}))
 	// .use(addStyle())
 	.use(addScript())

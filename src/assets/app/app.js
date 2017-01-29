@@ -62,6 +62,16 @@ angular
 					}
 				}
 			})
+			.state('blog.tag', {
+				url: 'tag/{tag:[0-9a-z\-]+}/',
+				views: {
+					'main@': {
+						templateUrl: function ($stateParams) {
+							return `partials/blog/tag/${$stateParams.tag}/`;
+						}
+					}
+				}
+			})
 			.state('blog.index', {
 				url: '{page:[0-9]+}/',
 				views: {

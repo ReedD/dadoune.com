@@ -1133,6 +1133,22 @@ buffer@^5.0.2:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
+"bufferjs@>= 2.0.0":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/bufferjs/-/bufferjs-3.0.1.tgz#0692e829cb10a10550e647390b035eb06c38e8ef"
+
+"bufferstream@>= 0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/bufferstream/-/bufferstream-0.6.2.tgz#a5f27e10d3c760084d14b35126615007319e3731"
+  dependencies:
+    bufferjs ">= 2.0.0"
+  optionalDependencies:
+    buffertools ">= 1.0.3"
+
+"buffertools@>= 1.0.3":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/buffertools/-/buffertools-2.1.4.tgz#62d4e1584c0090a0c7d3587f25934a84b8b38de4"
+
 builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
@@ -4326,6 +4342,12 @@ metalsmith-sass@^1.4.0:
     async "^2.1.4"
     node-sass "^4.2.0"
 
+metalsmith-tags@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/metalsmith-tags/-/metalsmith-tags-2.0.0.tgz#81a09877a703664c4155944dd946b7b8bfab0cfd"
+  dependencies:
+    slug "^0.9.1"
+
 metalsmith-uglify@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/metalsmith-uglify/-/metalsmith-uglify-1.5.1.tgz#f3e45e45de5186b65d40a2a7342987a7cb803808"
@@ -5736,6 +5758,12 @@ slug-component@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/slug-component/-/slug-component-1.1.0.tgz#224290a04591bf9ac08b9c622d3a14f43e3a0df7"
 
+slug@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/slug/-/slug-0.9.1.tgz#af08f608a7c11516b61778aa800dce84c518cfda"
+  dependencies:
+    unicode ">= 0.3.1"
+
 sntp@1.x.x:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/sntp/-/sntp-1.0.9.tgz#6541184cc90aeea6c6e7b35e2659082443c66198"
@@ -6340,6 +6368,12 @@ underscore.string@2.3.x:
 underscore@1.7.x:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.7.0.tgz#6bbaf0877500d36be34ecaa584e0db9fef035209"
+
+"unicode@>= 0.3.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/unicode/-/unicode-0.6.1.tgz#ec69e3c4537e2b9650b826133bcb068f0445d0bc"
+  dependencies:
+    bufferstream ">= 0.6.2"
 
 uniq@^1.0.1:
   version "1.0.1"

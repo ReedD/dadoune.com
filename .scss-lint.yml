@@ -1,3 +1,4 @@
+exclude: 'node_modules/**'
 linters:
   BorderZero:
     enabled: true

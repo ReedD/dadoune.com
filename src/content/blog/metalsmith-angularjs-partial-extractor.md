@@ -12,7 +12,7 @@ tags:
 layout: blog-post.hbs
 ---
 
-As I discussed in a previous blog [Preload AngularJS Templates](/blog/angular-ui-router-template-preload/), I wanted this site to render entirely within a single request and then fulfill all subsequent page requests with partials. This creates a small problem in that we need to generate two versions of the same content. Simple enough, just create two templates, one for the full page and one for the partial... That works, but it's also annoying. Who wants to write the same HTML twice? Not me. Plus, maintaining the same thing in two different places is always a bad idea. So I came up with an easy solution, I added a small step during my build phase that extracts the partial from the complete HTML and saves it to it's own file. It works roughly like this:
+As I discussed in a previous blog <a ui-sref="blog.post({title: 'angular-ui-router-template-preload'})">Preload AngularJS Templates</a>, I wanted this site to render entirely within a single request and then fulfill all subsequent page requests with partials. This creates a small problem in that we need to generate two versions of the same content. Simple enough, just create two templates, one for the full page and one for the partial... That works, but it's also annoying. Who wants to write the same HTML twice? Not me. Plus, maintaining the same thing in two different places is always a bad idea. So I came up with an easy solution, I added a small step during my build phase that extracts the partial from the complete HTML and saves it to it's own file. It works roughly like this:
 
 1. Convert Markdown into HTML
 2. Inject the HTML from step 1 into a Handlebar template

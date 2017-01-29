@@ -6,7 +6,7 @@ const nodegit  = require('nodegit-flow');
 const semver   = require('semver');
 const yargs    = require('yargs');
 
-var argv = yargs
+const argv = yargs
 	.fail((message, error) => {
 		console.error(message);
 		if (error) console.error(error.stack);
