@@ -64,7 +64,7 @@ const pushRelease = () => {
 			return remote.push([
 				"refs/heads/master:refs/heads/master",
 				"refs/heads/develop:refs/heads/develop",
-				"refs/tags/*:refs/tags/*"
+				`refs/tags/${newVer}:refs/tags/${newVer}`
 			], {
 				callbacks: {
 					credentials: (url, username) => {
