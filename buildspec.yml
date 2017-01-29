@@ -12,7 +12,7 @@ phases:
       - apt-get install -y yarn
   pre_build:
     commands:
-      - yarn
+      - yarn install --production
   build:
     commands:
       - yarn run build
