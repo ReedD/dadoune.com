@@ -3,7 +3,7 @@ phases:
   install:
     commands:
       # Install nodejs https://nodejs.org/en/download/package-manager/
-      - curl -sL https://deb.nodesource.com/setup_7.x | bash -
+      - curl -sL https://deb.nodesource.com/setup_8.x | bash -
       - apt-get install -y nodejs
       # Install yarn natively https://yarnpkg.com/en/docs/install#linux-tab
       - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -12,11 +12,12 @@ phases:
       - apt-get install -y yarn
   pre_build:
     commands:
-      - yarn install --production
+      - yarn
   build:
     commands:
       - yarn run build
   post_build:
     commands:
-      - aws s3 sync --delete --exclude assets/* build/ "s3://${BUCKET_NAME}"
-      - aws s3 sync --delete --cache-control "max-age=31536000" build/assets "s3://${BUCKET_NAME}/assets"
+      - aws s3 sync --delete dist/ "s3://${BUCKET_NAME}"
+      - aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "*.js" --cache-control "max-age=31536000"
+      - aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "static/*" --cache-control "max-age=31536000"
