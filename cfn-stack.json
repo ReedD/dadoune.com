@@ -8,6 +8,18 @@
       "AllowedPattern": "(?!-)[a-zA-Z0-9-.]{1,63}(?<![.-])",
       "ConstraintDescription": "Must be a valid domain name."
     },
+    "ContentfulSpaceID": {
+      "Description": "Contentful space ID.",
+      "Type": "String"
+    },
+    "ContentfulAccessToken": {
+      "Description": "Contentful access token.",
+      "Type": "String"
+    },
+    "ContentfulContentID": {
+      "Description": "Contentful content ID.",
+      "Type": "String"
+    },
     "GitHubOwner": {
       "Description": "GitHub account username.",
       "Type": "String"
@@ -161,6 +173,18 @@
             {
               "Name": "BUCKET_NAME",
               "Value": { "Ref": "StaticSiteBucket" }
+            },
+            {
+              "Name": "CONTENTFUL_SPACE_ID",
+              "Value": { "Ref": "ContentfulSpaceID" }
+            },
+            {
+              "Name": "CONTENTFUL_ACCESS_TOKEN",
+              "Value": { "Ref": "ContentfulAccessToken" }
+            },
+            {
+              "Name": "CONTENTFUL_BLOG_CONTENT_ID",
+              "Value": { "Ref": "ContentfulContentID" }
             }
           ]
         },
