@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, withSiteData } from 'react-static';
-import reedImg from '../../assets/reed.jpg';
+import reedImg from '../../assets/images/reed.jpg';
 import H1 from '../../components/H1';
 import H2 from '../../components/H2';
 import Section from '../../components/Section';

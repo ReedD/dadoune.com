@@ -138,6 +138,8 @@ export default {
     // Add .ts and .tsx extension to resolver
     config.resolve.extensions.push('.ts', '.tsx');
 
+    defaultLoaders.fileLoader.query.limit = 1;
+
     // We replace the existing JS rule with one, that allows us to use
     // both TypeScript and JavaScript interchangeably
     config.module.rules = [

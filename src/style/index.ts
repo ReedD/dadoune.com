@@ -1,7 +1,12 @@
 import { injectGlobal } from 'styled-components';
 import styledNormalize from 'styled-normalize';
-import { performanceFont, preferredFont } from './variables';
+import fontelloEot from '../assets/fonts/fontello.eot';
+import fontelloSvg from '../assets/fonts/fontello.svg';
+import fontelloTtf from '../assets/fonts/fontello.ttf';
+import fontelloWoff from '../assets/fonts/fontello.woff';
+import fontelloWoff2 from '../assets/fonts/fontello.woff2';
 import * as variables from './variables';
+import { preferredFont } from './variables';
 // import * as typography from './typography';
 
 injectGlobal`
@@ -19,12 +24,12 @@ injectGlobal`
   }
   @font-face {
     font-family: 'fontello';
-    src: url('/fonts/fontello.eot');
-    src: url('/fonts/fontello.eot') format('embedded-opentype'),
-      url('/fonts/fontello.woff') format('woff'),
-      url('/fonts/fontello.woff2') format('woff2'),
-      url('/fonts/fontello.ttf') format('truetype'),
-      url('/fonts/fontello.svg') format('svg');
+    src: url('${fontelloEot}');
+    src: url('${fontelloEot}') format('embedded-opentype'),
+      url('${fontelloWoff}') format('woff'),
+      url('${fontelloWoff2}') format('woff2'),
+      url('${fontelloTtf}') format('truetype'),
+      url('${fontelloSvg}') format('svg');
     font-weight: normal;
     font-style: normal;
   }
