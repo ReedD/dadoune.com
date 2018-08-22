@@ -1,416 +1,516 @@
 {
-	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "Static Site Stack",
-	"Parameters": {
-		"DomainName": {
-			"Description": "The site domain name (non www).",
-			"Type": "String",
-			"AllowedPattern": "(?!-)[a-zA-Z0-9-.]{1,63}(?<![.-])",
-			"ConstraintDescription": "Must be a valid domain name."
-		},
-		"GitHubOwner": {
-			"Description": "GitHub account username.",
-			"Type": "String"
-		},
-		"GitHubRepo": {
-			"Description": "Static site repo name.",
-			"Type": "String"
-		},
-		"GitHubBranch": {
-			"Description": "The branch that will trigger build/deploy.",
-			"Type": "String",
-			"Default": "master"
-		},
-		"GitHubOAuthToken": {
-			"Description": "OAuth or personal access token.",
-			"Type": "String",
-			"NoEcho": true
-		}
-	},
-	"Mappings": {
-		"S3WebsiteMap": {
-			"us-east-1":      {"endpoint": "s3-website-us-east-1.amazonaws.com"},
-			"us-east-2":      {"endpoint": "s3-website.us-east-2.amazonaws.com"},
-			"us-west-1":      {"endpoint": "s3-website-us-west-1.amazonaws.com"},
-			"us-west-2":      {"endpoint": "s3-website-us-west-2.amazonaws.com"},
-			"ca-central-1":   {"endpoint": "s3-website.ca-central-1.amazonaws.com"},
-			"ap-south-1":     {"endpoint": "s3-website.ap-south-1.amazonaws.com"},
-			"ap-northeast-2": {"endpoint": "s3-website.ap-northeast-2.amazonaws.com"},
-			"ap-southeast-1": {"endpoint": "s3-website-ap-southeast-1.amazonaws.com"},
-			"ap-southeast-2": {"endpoint": "s3-website-ap-southeast-2.amazonaws.com"},
-			"ap-northeast-1": {"endpoint": "s3-website-ap-northeast-1.amazonaws.com"},
-			"eu-central-1":   {"endpoint": "s3-website.eu-central-1.amazonaws.com"},
-			"eu-west-1":      {"endpoint": "s3-website-eu-west-1.amazonaws.com"},
-			"eu-west-2":      {"endpoint": "s3-website.eu-west-2.amazonaws.com"},
-			"sa-east-1":      {"endpoint": "s3-website-sa-east-1.amazonaws.com"}
-		}
-	},
-	"Resources": {
-		"SSLCertificate": {
-			"Type": "AWS::CertificateManager::Certificate",
-			"Properties": {
-				"DomainName": {"Ref": "DomainName"},
-				"SubjectAlternativeNames": [{"Fn::Sub": "www.${DomainName}"}],
-				"DomainValidationOptions": [{
-					"DomainName": {"Ref": "DomainName"},
-					"ValidationDomain": {"Ref": "DomainName"}
-				}, {
-					"DomainName": {"Fn::Sub": "www.${DomainName}"},
-					"ValidationDomain": {"Ref": "DomainName"}
-				}]
-			}
-		},
-		"WebAddress": {
-			"Type": "AWS::Route53::RecordSet",
-			"Properties": {
-				"AliasTarget": {
-					"HostedZoneId": "Z2FDTNDATAQYW2",
-					"DNSName": {"Fn::Sub": "${CloudFront.DomainName}"}
-				},
-				"HostedZoneName": {"Fn::Sub": "${DomainName}."},
-				"Name": {"Fn::Sub": "${DomainName}."},
-				"Type": "A"
-			}
-		},
-		"WWWWebAddress": {
-			"Type": "AWS::Route53::RecordSet",
-			"Properties": {
-				"AliasTarget": {
-					"HostedZoneId": "Z2FDTNDATAQYW2",
-					"DNSName": {"Fn::Sub": "${WWWCloudFront.DomainName}"}
-				},
-				"HostedZoneName": {"Fn::Sub": "${DomainName}."},
-				"Name": {"Fn::Sub": "www.${DomainName}."},
-				"Type": "A"
-			}
-		},
-		"CodeBuildRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"AssumeRolePolicyDocument": {
-					"Statement": [{
-						"Sid": "",
-						"Effect": "Allow",
-						"Principal": {
-							"Service": ["codebuild.amazonaws.com"]
-						},
-						"Action": "sts:AssumeRole"
-					}]
-				},
-				"Path": "/"
-			}
-		},
-		"CodeBuildRolePolicy": {
-			"Type": "AWS::IAM::Policy",
-			"Properties": {
-				"PolicyName": "CodeBuildRolePolicy",
-				"PolicyDocument": {
-					"Statement": [{
-						"Effect": "Allow",
-						"Resource": [
-							{"Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*"}
-						],
-						"Action": [
-							"logs:CreateLogGroup",
-							"logs:CreateLogStream",
-							"logs:PutLogEvents"
-						]
-					}, {
-						"Effect": "Allow",
-						"Resource": [
-							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}"},
-							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}/*"},
-							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}"},
-							{"Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}/*"}
-						],
-						"Action": [
-							"s3:*"
-						]
-					}]
-				},
-				"Roles": [{"Ref": "CodeBuildRole"}]
-			}
-		},
-		"CodeBuild": {
-			"Type": "AWS::CodeBuild::Project",
-			"Properties": {
-				"Artifacts": {
-					"Type": "CODEPIPELINE"
-				},
-				"Environment": {
-					"ComputeType": "BUILD_GENERAL1_SMALL",
-					"Image": "aws/codebuild/ubuntu-base:14.04",
-					"Type": "LINUX_CONTAINER",
-					"EnvironmentVariables": [{
-						"Name": "BUCKET_NAME",
-						"Value": {"Ref": "StaticSiteBucket"}
-					}]
-				},
-				"Name": {"Fn::Sub": "${AWS::StackName}-StaticSiteBuilder"},
-				"ServiceRole": {"Ref": "CodeBuildRole"},
-				"Source": {
-					"Type": "CODEPIPELINE"
-				},
-				"Tags": [{
-					"Key": "Stack",
-					"Value": {"Ref": "AWS::StackName"}
-				}],
-				"TimeoutInMinutes": 10
-			}
-		},
-		"CodePipelineRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"AssumeRolePolicyDocument": {
-					"Statement": [{
-						"Sid": "",
-						"Effect": "Allow",
-						"Principal": {
-							"Service": ["codepipeline.amazonaws.com"]
-						},
-						"Action": "sts:AssumeRole"
-					}]
-				},
-				"Path": "/"
-			}
-		},
-		"CodePipelineRolePolicy": {
-			"Type": "AWS::IAM::Policy",
-			"Properties": {
-				"PolicyName": "CodePipelineRolePolicy",
-				"PolicyDocument": {
-					"Statement": [{
-						"Action": [
-							"s3:GetObject",
-							"s3:GetObjectVersion",
-							"s3:GetBucketVersioning"
-						],
-						"Resource": "*",
-						"Effect": "Allow"
-					}, {
-						"Action": [
-							"s3:PutObject"
-						],
-						"Resource": [
-							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}"},
-							{"Fn::Sub": "arn:aws:s3:::${ArtifactBucket}/*"}
-						],
-						"Effect": "Allow"
-					}, {
-						"Action": [
-							"codebuild:BatchGetBuilds",
-							"codebuild:StartBuild"
-						],
-						"Resource": "*",
-						"Effect": "Allow"
-					}]
-				},
-				"Roles": [{"Ref": "CodePipelineRole"}]
-			}
-		},
-		"CodePipeline": {
-			"Type": "AWS::CodePipeline::Pipeline",
-			"Properties": {
-				"RoleArn": {"Fn::GetAtt": ["CodePipelineRole", "Arn"] },
-				"Stages": [{
-					"Name": "Source",
-					"Actions": [{
-						"Name": "SourceAction",
-						"ActionTypeId": {
-							"Category": "Source",
-							"Owner": "ThirdParty",
-							"Version": "1",
-							"Provider": "GitHub"
-						},
-						"OutputArtifacts": [{
-							"Name": "StaticSiteSource"
-						}],
-						"Configuration": {
-							"Owner": {"Ref": "GitHubOwner"},
-							"Repo": {"Ref": "GitHubRepo"},
-							"Branch": {"Ref": "GitHubBranch"},
-							"OAuthToken": {"Ref": "GitHubOAuthToken"}
-						},
-						"RunOrder": 1
-					}]
-				}, {
-					"Name": "Build",
-					"Actions": [{
-						"Name": "CodeBuild",
-						"InputArtifacts": [{
-							"Name": "StaticSiteSource"
-						}],
-						"ActionTypeId": {
-							"Category": "Build",
-							"Owner": "AWS",
-							"Version": "1",
-							"Provider": "CodeBuild"
-						},
-						"OutputArtifacts": [{
-							"Name": "StaticSite"
-						}],
-						"Configuration": {
-							"ProjectName": {"Ref": "CodeBuild"}
-						},
-						"RunOrder": 1
-					}]
-				}],
-				"ArtifactStore": {
-					"Type": "S3",
-					"Location": {"Ref": "ArtifactBucket"}
-				}
-			}
-		},
-		"ArtifactBucket": {
-			"Type": "AWS::S3::Bucket",
-			"DeletionPolicy": "Delete",
-			"Properties": {
-				"AccessControl": "Private"
-			}
-		},
-		"RedirectBucket": {
-			"Type": "AWS::S3::Bucket",
-			"DeletionPolicy": "Delete",
-			"Properties": {
-				"AccessControl": "PublicRead",
-				"WebsiteConfiguration": {
-					"RedirectAllRequestsTo": {
-						"HostName": {"Fn::Sub": "www.${DomainName}"},
-						"Protocol": "https"
-					}
-				}
-			}
-		},
-		"StaticSiteBucketPolicy": {
-			"Type": "AWS::S3::BucketPolicy",
-			"Properties": {
-				"Bucket": {"Ref": "StaticSiteBucket"},
-				"PolicyDocument": {
-					"Statement":[{
-						"Action": ["s3:GetObject"],
-						"Effect": "Allow",
-						"Resource": {"Fn::Sub":"arn:aws:s3:::${StaticSiteBucket}/*"},
-						"Principal": "*"
-					}]
-				}
-			}
-		},
-		"StaticSiteBucket": {
-			"Type": "AWS::S3::Bucket",
-			"DeletionPolicy": "Retain",
-			"Properties": {
-				"AccessControl": "PublicRead",
-				"WebsiteConfiguration": {
-					"IndexDocument": "index.html",
-					"ErrorDocument": "404/index.html"
-				}
-			}
-		},
-		"CloudFront": {
-			"Type": "AWS::CloudFront::Distribution",
-			"Properties": {
-				"DistributionConfig": {
-					"Aliases": [
-						{"Ref": "DomainName"}
-					],
-					"CacheBehaviors": [],
-					"DefaultCacheBehavior": {
-						"AllowedMethods": ["GET", "HEAD", "OPTIONS"],
-						"CachedMethods": ["HEAD", "GET", "OPTIONS"],
-						"Compress": true,
-						"TargetOriginId": "S3Bucket",
-						"ForwardedValues": {
-							"QueryString": false,
-							"Cookies": {"Forward": "none"},
-							"Headers": []
-						},
-						"DefaultTTL": 0,
-						"MinTTL": 0,
-						"MaxTTL": 31536000,
-						"SmoothStreaming": false,
-						"ViewerProtocolPolicy": "redirect-to-https"
-					},
-					"Enabled": true,
-					"HttpVersion": "http2",
-					"Origins": [{
-						"DomainName": {"Fn::Sub": ["${RedirectBucket}.${Endpoint}", {
-							"Endpoint": {"Fn::FindInMap": ["S3WebsiteMap", {"Ref": "AWS::Region"}, "endpoint"]}}
-						]},
-						"Id": "S3Bucket",
-						"CustomOriginConfig": {
-							"HTTPPort": 80,
-							"OriginProtocolPolicy": "http-only"
-						}
-					}],
-					"PriceClass": "PriceClass_All",
-					"ViewerCertificate": {
-						"SslSupportMethod": "sni-only",
-						"AcmCertificateArn": {"Ref": "SSLCertificate"}
-					}
-				}
-			}
-		},
-		"WWWCloudFront": {
-			"Type": "AWS::CloudFront::Distribution",
-			"Properties": {
-				"DistributionConfig": {
-					"Aliases": [
-						{"Fn::Sub": "www.${DomainName}"}
-					],
-					"CacheBehaviors": [{
-						"AllowedMethods": ["GET", "HEAD", "OPTIONS"],
-						"CachedMethods": ["GET", "HEAD", "OPTIONS"],
-						"Compress": true,
-						"ForwardedValues": {
-							"QueryString": false,
-							"Cookies": {"Forward": "none"},
-							"Headers": []
-						},
-						"DefaultTTL": 86400,
-						"MinTTL": 86400,
-						"MaxTTL": 31536000,
-						"ViewerProtocolPolicy": "redirect-to-https",
-						"PathPattern": "assets/*",
-						"SmoothStreaming": false,
-						"TargetOriginId": "S3Bucket"
-					}],
-					"DefaultCacheBehavior": {
-						"AllowedMethods": ["GET", "HEAD", "OPTIONS"],
-						"CachedMethods": ["HEAD", "GET", "OPTIONS"],
-						"Compress": true,
-						"TargetOriginId": "S3Bucket",
-						"ForwardedValues": {
-							"QueryString": false,
-							"Cookies": {"Forward": "none"},
-							"Headers": []
-						},
-						"DefaultTTL": 0,
-						"MinTTL": 0,
-						"MaxTTL": 31536000,
-						"SmoothStreaming": false,
-						"ViewerProtocolPolicy": "redirect-to-https"
-					},
-					"Enabled": true,
-					"HttpVersion": "http2",
-					"Origins": [{
-						"DomainName": {"Fn::Sub": ["${StaticSiteBucket}.${Endpoint}", {
-							"Endpoint": {"Fn::FindInMap": ["S3WebsiteMap", {"Ref": "AWS::Region"}, "endpoint"]}}
-						]},
-						"Id": "S3Bucket",
-						"CustomOriginConfig": {
-							"HTTPPort": 80,
-							"OriginProtocolPolicy": "http-only"
-						}
-					}],
-					"PriceClass": "PriceClass_All",
-					"ViewerCertificate": {
-						"SslSupportMethod": "sni-only",
-						"AcmCertificateArn": {"Ref": "SSLCertificate"}
-					}
-				}
-			}
-		}
-	},
-	"Outputs": {
-	}
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Static Site Stack",
+  "Parameters": {
+    "DomainName": {
+      "Description": "The site domain name (non www).",
+      "Type": "String",
+      "AllowedPattern": "(?!-)[a-zA-Z0-9-.]{1,63}(?<![.-])",
+      "ConstraintDescription": "Must be a valid domain name."
+    },
+    "ContentfulSpaceID": {
+      "Description": "Contentful space ID.",
+      "Type": "String"
+    },
+    "ContentfulAccessToken": {
+      "Description": "Contentful access token.",
+      "Type": "String"
+    },
+    "ContentfulContentID": {
+      "Description": "Contentful content ID.",
+      "Type": "String"
+    },
+    "GitHubOwner": {
+      "Description": "GitHub account username.",
+      "Type": "String"
+    },
+    "GitHubRepo": {
+      "Description": "Static site repo name.",
+      "Type": "String"
+    },
+    "GitHubBranch": {
+      "Description": "The branch that will trigger build/deploy.",
+      "Type": "String",
+      "Default": "master"
+    },
+    "GitHubOAuthToken": {
+      "Description": "OAuth or personal access token.",
+      "Type": "String",
+      "NoEcho": true
+    }
+  },
+  "Mappings": {
+    "S3WebsiteMap": {
+      "us-east-1": { "endpoint": "s3-website-us-east-1.amazonaws.com" },
+      "us-east-2": { "endpoint": "s3-website.us-east-2.amazonaws.com" },
+      "us-west-1": { "endpoint": "s3-website-us-west-1.amazonaws.com" },
+      "us-west-2": { "endpoint": "s3-website-us-west-2.amazonaws.com" },
+      "ca-central-1": { "endpoint": "s3-website.ca-central-1.amazonaws.com" },
+      "ap-south-1": { "endpoint": "s3-website.ap-south-1.amazonaws.com" },
+      "ap-northeast-2": {
+        "endpoint": "s3-website.ap-northeast-2.amazonaws.com"
+      },
+      "ap-southeast-1": {
+        "endpoint": "s3-website-ap-southeast-1.amazonaws.com"
+      },
+      "ap-southeast-2": {
+        "endpoint": "s3-website-ap-southeast-2.amazonaws.com"
+      },
+      "ap-northeast-1": {
+        "endpoint": "s3-website-ap-northeast-1.amazonaws.com"
+      },
+      "eu-central-1": { "endpoint": "s3-website.eu-central-1.amazonaws.com" },
+      "eu-west-1": { "endpoint": "s3-website-eu-west-1.amazonaws.com" },
+      "eu-west-2": { "endpoint": "s3-website.eu-west-2.amazonaws.com" },
+      "sa-east-1": { "endpoint": "s3-website-sa-east-1.amazonaws.com" }
+    }
+  },
+  "Resources": {
+    "SSLCertificate": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Properties": {
+        "DomainName": { "Ref": "DomainName" },
+        "SubjectAlternativeNames": [{ "Fn::Sub": "www.${DomainName}" }],
+        "DomainValidationOptions": [
+          {
+            "DomainName": { "Ref": "DomainName" },
+            "ValidationDomain": { "Ref": "DomainName" }
+          },
+          {
+            "DomainName": { "Fn::Sub": "www.${DomainName}" },
+            "ValidationDomain": { "Ref": "DomainName" }
+          }
+        ]
+      }
+    },
+    "WebAddress": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "AliasTarget": {
+          "HostedZoneId": "Z2FDTNDATAQYW2",
+          "DNSName": { "Fn::Sub": "${CloudFront.DomainName}" }
+        },
+        "HostedZoneName": { "Fn::Sub": "${DomainName}." },
+        "Name": { "Fn::Sub": "${DomainName}." },
+        "Type": "A"
+      }
+    },
+    "WWWWebAddress": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "AliasTarget": {
+          "HostedZoneId": "Z2FDTNDATAQYW2",
+          "DNSName": { "Fn::Sub": "${WWWCloudFront.DomainName}" }
+        },
+        "HostedZoneName": { "Fn::Sub": "${DomainName}." },
+        "Name": { "Fn::Sub": "www.${DomainName}." },
+        "Type": "A"
+      }
+    },
+    "CodeBuildRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["codebuild.amazonaws.com"]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/"
+      }
+    },
+    "CodeBuildRolePolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "CodeBuildRolePolicy",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*"
+                }
+              ],
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Resource": [
+                { "Fn::Sub": "arn:aws:s3:::${ArtifactBucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${ArtifactBucket}/*" },
+                { "Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}/*" }
+              ],
+              "Action": ["s3:*"]
+            }
+          ]
+        },
+        "Roles": [{ "Ref": "CodeBuildRole" }]
+      }
+    },
+    "CodeBuild": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/ubuntu-base:14.04",
+          "Type": "LINUX_CONTAINER",
+          "EnvironmentVariables": [
+            {
+              "Name": "BUCKET_NAME",
+              "Value": { "Ref": "StaticSiteBucket" }
+            },
+            {
+              "Name": "CONTENTFUL_SPACE_ID",
+              "Value": { "Ref": "ContentfulSpaceID" }
+            },
+            {
+              "Name": "CONTENTFUL_ACCESS_TOKEN",
+              "Value": { "Ref": "ContentfulAccessToken" }
+            },
+            {
+              "Name": "CONTENTFUL_BLOG_CONTENT_ID",
+              "Value": { "Ref": "ContentfulContentID" }
+            }
+          ]
+        },
+        "Name": { "Fn::Sub": "${AWS::StackName}-StaticSiteBuilder" },
+        "ServiceRole": { "Ref": "CodeBuildRole" },
+        "Source": {
+          "Type": "CODEPIPELINE"
+        },
+        "Tags": [
+          {
+            "Key": "Stack",
+            "Value": { "Ref": "AWS::StackName" }
+          }
+        ],
+        "TimeoutInMinutes": 10
+      }
+    },
+    "CodePipelineRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["codepipeline.amazonaws.com"]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/"
+      }
+    },
+    "CodePipelineRolePolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "CodePipelineRolePolicy",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:GetBucketVersioning"
+              ],
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": ["s3:PutObject"],
+              "Resource": [
+                { "Fn::Sub": "arn:aws:s3:::${ArtifactBucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${ArtifactBucket}/*" }
+              ],
+              "Effect": "Allow"
+            },
+            {
+              "Action": ["codebuild:BatchGetBuilds", "codebuild:StartBuild"],
+              "Resource": "*",
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Roles": [{ "Ref": "CodePipelineRole" }]
+      }
+    },
+    "CodePipeline": {
+      "Type": "AWS::CodePipeline::Pipeline",
+      "Properties": {
+        "RoleArn": { "Fn::GetAtt": ["CodePipelineRole", "Arn"] },
+        "Stages": [
+          {
+            "Name": "Source",
+            "Actions": [
+              {
+                "Name": "SourceAction",
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Version": "1",
+                  "Provider": "GitHub"
+                },
+                "OutputArtifacts": [
+                  {
+                    "Name": "StaticSiteSource"
+                  }
+                ],
+                "Configuration": {
+                  "Owner": { "Ref": "GitHubOwner" },
+                  "Repo": { "Ref": "GitHubRepo" },
+                  "Branch": { "Ref": "GitHubBranch" },
+                  "OAuthToken": { "Ref": "GitHubOAuthToken" }
+                },
+                "RunOrder": 1
+              }
+            ]
+          },
+          {
+            "Name": "Build",
+            "Actions": [
+              {
+                "Name": "CodeBuild",
+                "InputArtifacts": [
+                  {
+                    "Name": "StaticSiteSource"
+                  }
+                ],
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Version": "1",
+                  "Provider": "CodeBuild"
+                },
+                "OutputArtifacts": [
+                  {
+                    "Name": "StaticSite"
+                  }
+                ],
+                "Configuration": {
+                  "ProjectName": { "Ref": "CodeBuild" }
+                },
+                "RunOrder": 1
+              }
+            ]
+          }
+        ],
+        "ArtifactStore": {
+          "Type": "S3",
+          "Location": { "Ref": "ArtifactBucket" }
+        }
+      }
+    },
+    "ArtifactBucket": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AccessControl": "Private"
+      }
+    },
+    "RedirectBucket": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AccessControl": "PublicRead",
+        "WebsiteConfiguration": {
+          "RedirectAllRequestsTo": {
+            "HostName": { "Fn::Sub": "www.${DomainName}" },
+            "Protocol": "https"
+          }
+        }
+      }
+    },
+    "StaticSiteBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": { "Ref": "StaticSiteBucket" },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": ["s3:GetObject"],
+              "Effect": "Allow",
+              "Resource": { "Fn::Sub": "arn:aws:s3:::${StaticSiteBucket}/*" },
+              "Principal": "*"
+            }
+          ]
+        }
+      }
+    },
+    "StaticSiteBucket": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AccessControl": "PublicRead",
+        "WebsiteConfiguration": {
+          "IndexDocument": "index.html",
+          "ErrorDocument": "404/index.html"
+        }
+      }
+    },
+    "CloudFront": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Aliases": [{ "Ref": "DomainName" }],
+          "CacheBehaviors": [],
+          "DefaultCacheBehavior": {
+            "AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+            "CachedMethods": ["HEAD", "GET", "OPTIONS"],
+            "Compress": true,
+            "TargetOriginId": "S3Bucket",
+            "ForwardedValues": {
+              "QueryString": false,
+              "Cookies": { "Forward": "none" },
+              "Headers": []
+            },
+            "DefaultTTL": 0,
+            "MinTTL": 0,
+            "MaxTTL": 31536000,
+            "SmoothStreaming": false,
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::Sub": [
+                  "${RedirectBucket}.${Endpoint}",
+                  {
+                    "Endpoint": {
+                      "Fn::FindInMap": [
+                        "S3WebsiteMap",
+                        { "Ref": "AWS::Region" },
+                        "endpoint"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "Id": "S3Bucket",
+              "CustomOriginConfig": {
+                "HTTPPort": 80,
+                "OriginProtocolPolicy": "http-only"
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_All",
+          "ViewerCertificate": {
+            "SslSupportMethod": "sni-only",
+            "AcmCertificateArn": { "Ref": "SSLCertificate" }
+          }
+        }
+      }
+    },
+    "WWWCloudFront": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Aliases": [{ "Fn::Sub": "www.${DomainName}" }],
+          "CacheBehaviors": [
+            {
+              "AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+              "CachedMethods": ["GET", "HEAD", "OPTIONS"],
+              "Compress": true,
+              "ForwardedValues": {
+                "QueryString": false,
+                "Cookies": { "Forward": "none" },
+                "Headers": []
+              },
+              "DefaultTTL": 86400,
+              "MinTTL": 86400,
+              "MaxTTL": 31536000,
+              "ViewerProtocolPolicy": "redirect-to-https",
+              "PathPattern": "*.js",
+              "SmoothStreaming": false,
+              "TargetOriginId": "S3Bucket"
+            },
+            {
+              "AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+              "CachedMethods": ["GET", "HEAD", "OPTIONS"],
+              "Compress": true,
+              "ForwardedValues": {
+                "QueryString": false,
+                "Cookies": { "Forward": "none" },
+                "Headers": []
+              },
+              "DefaultTTL": 86400,
+              "MinTTL": 86400,
+              "MaxTTL": 31536000,
+              "ViewerProtocolPolicy": "redirect-to-https",
+              "PathPattern": "static/*",
+              "SmoothStreaming": false,
+              "TargetOriginId": "S3Bucket"
+            }
+          ],
+          "DefaultCacheBehavior": {
+            "AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+            "CachedMethods": ["HEAD", "GET", "OPTIONS"],
+            "Compress": true,
+            "TargetOriginId": "S3Bucket",
+            "ForwardedValues": {
+              "QueryString": false,
+              "Cookies": { "Forward": "none" },
+              "Headers": []
+            },
+            "DefaultTTL": 0,
+            "MinTTL": 0,
+            "MaxTTL": 31536000,
+            "SmoothStreaming": false,
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::Sub": [
+                  "${StaticSiteBucket}.${Endpoint}",
+                  {
+                    "Endpoint": {
+                      "Fn::FindInMap": [
+                        "S3WebsiteMap",
+                        { "Ref": "AWS::Region" },
+                        "endpoint"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "Id": "S3Bucket",
+              "CustomOriginConfig": {
+                "HTTPPort": 80,
+                "OriginProtocolPolicy": "http-only"
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_All",
+          "ViewerCertificate": {
+            "SslSupportMethod": "sni-only",
+            "AcmCertificateArn": { "Ref": "SSLCertificate" }
+          }
+        }
+      }
+    }
+  },
+  "Outputs": {}
 }
