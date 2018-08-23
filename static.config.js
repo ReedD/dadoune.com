@@ -23,6 +23,7 @@ marked.setOptions({
 const typescriptWebpackPaths = require('./webpack.config.js');
 
 export default {
+  siteRoot: 'https://www.dadoune.com',
   entry: path.join(__dirname, 'src', 'index.tsx'),
   getSiteData: () => ({
     title: 'React Static',
