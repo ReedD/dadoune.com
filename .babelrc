@@ -1,4 +1,18 @@
 {
   "extends": "react-static/.babelrc",
-  "plugins": ["babel-plugin-styled-components"]
+  "env": {
+    "production": {
+      "plugins": [
+        [
+          "babel-plugin-styled-components",
+          {
+            "displayName": false
+          }
+        ]
+      ]
+    },
+    "development": {
+      "plugins": ["babel-plugin-styled-components"]
+    }
+  }
 }
