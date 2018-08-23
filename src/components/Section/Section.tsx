@@ -5,4 +5,8 @@ export default styled.section`
   margin: 0 auto;
   display: flex;
   flex: 1;
+
+  @media (max-width: 768px) {
+    margin: 0 1.5rem;
+  }
 `;
