@@ -18,7 +18,7 @@ phases:
       - CONTENTFUL_SPACE_ID="${CONTENTFUL_SPACE_ID}" CONTENTFUL_ACCESS_TOKEN="${CONTENTFUL_ACCESS_TOKEN}" CONTENTFUL_BLOG_CONTENT_ID="${CONTENTFUL_BLOG_CONTENT_ID}" yarn run build
   post_build:
     commands:
-      - >
+      - |
         if [ $CODEBUILD_BUILD_SUCCEEDING = 1 ]
         then
           aws s3 sync --delete dist/ "s3://${BUCKET_NAME}"
