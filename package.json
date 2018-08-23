@@ -1,13 +1,13 @@
 {
   "name": "dadoune.com",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "build": "react-static build",
     "prettier": "yarn run prettier:ts -- \"./src/**/*.{ts,tsx}\"",
     "prettier:ts": "prettier --single-quote --trailing-comma all --write",
-    "release": "standard-version",
+    "release": "standard-version && git push --follow-tags origin develop && git checkout master && git merge develop  --no-edit && git push && git checkout develop",
     "serve": "serve dist -p 3000",
     "stage": "react-static build --staging",
     "start": "react-static start"

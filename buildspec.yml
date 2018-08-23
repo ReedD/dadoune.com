@@ -18,6 +18,13 @@ phases:
       - CONTENTFUL_SPACE_ID="${CONTENTFUL_SPACE_ID}" CONTENTFUL_ACCESS_TOKEN="${CONTENTFUL_ACCESS_TOKEN}" CONTENTFUL_BLOG_CONTENT_ID="${CONTENTFUL_BLOG_CONTENT_ID}" yarn run build
   post_build:
     commands:
-      - aws s3 sync --delete dist/ "s3://${BUCKET_NAME}"
-      - aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "*.js" --cache-control "max-age=31536000"
-      - aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "static/*" --cache-control "max-age=31536000"
+      - >
+        if [ $CODEBUILD_BUILD_SUCCEEDING = 1 ]
+        then
+          aws s3 sync --delete dist/ "s3://${BUCKET_NAME}"
+          aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "*.js" --cache-control "max-age=31536000"
+          aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "static/*" --cache-control "max-age=31536000"
+          echo Build success
+        else
+          echo Build failed
+        fi
