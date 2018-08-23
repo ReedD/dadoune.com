@@ -2,6 +2,7 @@ import axios from 'axios';
 import { createClient } from 'contentful';
 import 'dotenv/config';
 import { highlightAuto } from 'highlight.js';
+import ImageminPlugin from 'imagemin-webpack-plugin';
 import marked from 'marked';
 import path from 'path';
 import React, { Component } from 'react';
@@ -165,6 +166,14 @@ export default {
         ],
       },
     ];
+    config.plugins.push(
+      new ImageminPlugin({
+        disable: process.env.NODE_ENV !== 'production', // Disable during development
+        pngquant: {
+          quality: '95-100',
+        },
+      }),
+    );
     return config;
   },
 };
