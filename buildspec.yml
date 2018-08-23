@@ -22,8 +22,8 @@ phases:
         if [ $CODEBUILD_BUILD_SUCCEEDING = 1 ]
         then
           aws s3 sync --delete dist/ "s3://${BUCKET_NAME}"
-          aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "*.js" --cache-control "max-age=31536000"
-          aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "static/*" --cache-control "max-age=31536000"
+          aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "*.js" --cache-control "max-age=31536000 --metadata-directive REPLACE"
+          aws s3 cp "s3://${BUCKET_NAME}" "s3://${BUCKET_NAME}" --exclude "*" --include "static/*" --cache-control "max-age=31536000 --metadata-directive REPLACE"
           echo Build success
         else
           echo Build failed
