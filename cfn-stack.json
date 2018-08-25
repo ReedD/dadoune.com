@@ -436,8 +436,8 @@
                 "Cookies": { "Forward": "none" },
                 "Headers": []
               },
-              "DefaultTTL": 86400,
-              "MinTTL": 86400,
+              "DefaultTTL": 0,
+              "MinTTL": 0,
               "MaxTTL": 31536000,
               "ViewerProtocolPolicy": "redirect-to-https",
               "PathPattern": "*.js",
