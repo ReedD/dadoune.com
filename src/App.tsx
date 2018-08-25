@@ -1,6 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import { Router, Head } from 'react-static';
+import { Head, Route, Router } from 'react-static';
 import Routes from 'react-static-routes';
 import styled from 'styled-components';
 import Footer from './components/Footer';
@@ -45,6 +45,19 @@ const App = () => (
     </Head>
     <Router>
       <Content>
+        <Route
+          path="/"
+          render={({ location }) => {
+            if (
+              typeof window !== 'undefined' &&
+              typeof window.ga === 'function'
+            ) {
+              window.ga('set', 'page', location.pathname + location.search);
+              window.ga('send', 'pageview');
+            }
+            return null;
+          }}
+        />
         <Navigation />
         <Routes />
         <Footer />
