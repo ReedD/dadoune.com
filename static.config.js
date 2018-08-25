@@ -121,15 +121,6 @@ export default {
       return (
         <Html>
           <Head>
-            <meta charSet="UTF-8" />
-            <title>Home | dadoune.com</title>
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1"
-            />
-            <meta name="author" content="Reed Dadoune" />
-            <meta name="robots" content="index, follow" />
-            <link rel="canonical" href="https://dadoune.com/" />
             {renderMeta.styleTags}
           </Head>
           <Body>{children}</Body>
