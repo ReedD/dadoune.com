@@ -185,7 +185,7 @@ export default {
       runtimeCaching: [
         {
           handler: 'cacheFirst',
-          urlPattern: /routeInfo|^[^\.]+$/i,
+          urlPattern: /routeInfo|\/[^\.]*$/i,
         },
       ],
     });
