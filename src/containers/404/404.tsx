@@ -1,14 +1,15 @@
 import React from 'react';
-import { Head } from 'react-static';
+import { Head, withSiteData } from 'react-static';
 import H1 from '../../components/H1';
 import H2 from '../../components/H2';
 import Section from '../../components/Section';
+import { ISiteData } from '../../types';
 import Inner from './Inner';
 
-export default () => (
+const NotFound: React.SFC<ISiteData> = ({ siteName }) => (
   <Section>
     <Head>
-      <title>404 Not Found | dadoune.com</title>
+      <title>404 Not Found | {siteName}</title>
     </Head>
     <Inner>
       <H1>404</H1>
@@ -16,3 +17,5 @@ export default () => (
     </Inner>
   </Section>
 );
+
+export default withSiteData(NotFound);

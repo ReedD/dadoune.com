@@ -4,14 +4,15 @@ import reedImg from '../../assets/images/reed.jpg';
 import H1 from '../../components/H1';
 import H2 from '../../components/H2';
 import Section from '../../components/Section';
+import { ISiteData } from '../../types';
 import Img from './Img';
 import Inner from './Inner';
 import Meta from './Meta';
 
-export default withSiteData(() => (
+const Home: React.SFC<ISiteData> = ({ siteName }) => (
   <Section>
     <Head>
-      <title>Reed Dadoune | dadoune.com</title>
+      <title>{siteName}</title>
     </Head>
     <Inner>
       <Img alt="Reed Dadoune" src={reedImg} />
@@ -21,4 +22,6 @@ export default withSiteData(() => (
       </Meta>
     </Inner>
   </Section>
-));
+);
+
+export default withSiteData(Home);

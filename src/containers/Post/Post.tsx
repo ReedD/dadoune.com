@@ -1,25 +1,27 @@
 import React from 'react';
-import { Head, withRouteData } from 'react-static';
+import { Head, withRouteData, withSiteData } from 'react-static';
 import H1 from '../../components/H1';
 import H2 from '../../components/H2';
 import Link from '../../components/Link';
 import Section from '../../components/Section';
 import slugTag from '../../lib/slugTag';
 import toDateString from '../../lib/toDateString';
-import { IBlog } from '../../types';
+import { IBlog, ISiteData } from '../../types';
 import Article from './Article';
 import './highlight';
 import Li from './Li';
 import Ul from './Ul';
 
-interface IPostProps {
+interface IPostProps extends ISiteData {
   blog: IBlog;
 }
 
-export default withRouteData(({ blog }: IPostProps) => (
+const Post: React.SFC<IPostProps> = ({ blog, siteName }) => (
   <Section>
     <Head>
-      <title>{blog.title} | dadoune.com</title>
+      <title>
+        {blog.title} | {siteName}
+      </title>
     </Head>
     <Article>
       <H1>{blog.title}</H1>
@@ -35,4 +37,6 @@ export default withRouteData(({ blog }: IPostProps) => (
       <div dangerouslySetInnerHTML={{ __html: blog.body }} />
     </Article>
   </Section>
-));
+);
+
+export default withSiteData(withRouteData(Post));
