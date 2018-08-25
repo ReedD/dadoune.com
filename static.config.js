@@ -8,6 +8,7 @@ import path from 'path';
 import React, { Component } from 'react';
 // TODO: import slugTag from 'src/lib/slugTag';
 import { ServerStyleSheet } from 'styled-components';
+import { generateSW } from 'workbox-build';
 
 const slugTag = text =>
   text
@@ -175,5 +176,18 @@ export default {
       }),
     );
     return config;
+  },
+  onBuild: async () => {
+    await generateSW({
+      globDirectory: './dist',
+      globPatterns: ['static/*', '**/*.js'],
+      swDest: 'dist/sw.js',
+      runtimeCaching: [
+        {
+          handler: 'cacheFirst',
+          urlPattern: /routeInfo|^[^\.]+$/i,
+        },
+      ],
+    });
   },
 };
