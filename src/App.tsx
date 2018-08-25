@@ -40,7 +40,7 @@ const App = () => (
           })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
           ga('create', 'UA-48078670-1', 'auto');
           ga('send', 'pageview');
-        `}
+        `.replace(/\s+/g, ' ')}
       </script>
     </Head>
     <Router>

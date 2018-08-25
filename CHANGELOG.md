@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.3"></a>
+## [2.2.3](https://github.com/ReedD/dadoune.com/compare/v2.2.2...v2.2.3) (2018-08-25)
+
+
+### Bug Fixes
+
+* **analytics:** Remove extra whitespace ([7b50de4](https://github.com/ReedD/dadoune.com/commit/7b50de4))
+
+
+
 <a name="2.2.2"></a>
 ## [2.2.2](https://github.com/ReedD/dadoune.com/compare/v2.2.1...v2.2.2) (2018-08-25)
 
