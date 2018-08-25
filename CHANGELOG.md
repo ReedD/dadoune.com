@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.9"></a>
+## [2.2.9](https://github.com/ReedD/dadoune.com/compare/v2.2.8...v2.2.9) (2018-08-25)
+
+
+### Bug Fixes
+
+* **build:** Remove sw and analytics from dev ([3a98a65](https://github.com/ReedD/dadoune.com/commit/3a98a65))
+
+
+
 <a name="2.2.8"></a>
 ## [2.2.8](https://github.com/ReedD/dadoune.com/compare/v2.2.7...v2.2.8) (2018-08-25)
 
