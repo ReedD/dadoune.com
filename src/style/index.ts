@@ -6,7 +6,7 @@ import fontelloTtf from '../assets/fonts/fontello.ttf';
 import fontelloWoff from '../assets/fonts/fontello.woff';
 import fontelloWoff2 from '../assets/fonts/fontello.woff2';
 import * as variables from './variables';
-import { preferredFont } from './variables';
+import { colorPrimary, preferredFont } from './variables';
 // import * as typography from './typography';
 
 injectGlobal`
@@ -21,6 +21,10 @@ injectGlobal`
     font-size: 1rem;
     margin: 0;
     padding: 0;
+  }
+  a {
+    color: rgb(${colorPrimary});
+    text-decoration: none;
   }
   @font-face {
     font-family: 'fontello';

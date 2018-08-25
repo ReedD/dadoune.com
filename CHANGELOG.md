@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.6"></a>
+## [2.2.6](https://github.com/ReedD/dadoune.com/compare/v2.2.5...v2.2.6) (2018-08-25)
+
+
+### Bug Fixes
+
+* **seo:** Remove canonical temp. ([b31ef61](https://github.com/ReedD/dadoune.com/commit/b31ef61))
+* **style:** Style tweaks ([75a39ed](https://github.com/ReedD/dadoune.com/commit/75a39ed))
+
+
+
 <a name="2.2.5"></a>
 ## [2.2.5](https://github.com/ReedD/dadoune.com/compare/v2.2.4...v2.2.5) (2018-08-25)
 

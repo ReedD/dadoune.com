@@ -19,7 +19,6 @@ const App = () => (
   <div>
     <Head>
       <meta charSet="UTF-8" />
-      <link rel="canonical" href="https://www.dadoune.com/" />
       <link rel="manifest" href="manifest.json" />
       <meta name="author" content="Reed Dadoune" />
       <meta name="description" content={description} />
