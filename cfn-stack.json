@@ -436,6 +436,23 @@
                 "Cookies": { "Forward": "none" },
                 "Headers": []
               },
+              "DefaultTTL": 86400,
+              "MinTTL": 86400,
+              "MaxTTL": 31536000,
+              "ViewerProtocolPolicy": "redirect-to-https",
+              "PathPattern": "*.*.js",
+              "SmoothStreaming": false,
+              "TargetOriginId": "S3Bucket"
+            },
+            {
+              "AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+              "CachedMethods": ["GET", "HEAD", "OPTIONS"],
+              "Compress": true,
+              "ForwardedValues": {
+                "QueryString": false,
+                "Cookies": { "Forward": "none" },
+                "Headers": []
+              },
               "DefaultTTL": 0,
               "MinTTL": 0,
               "MaxTTL": 31536000,

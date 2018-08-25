@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.1"></a>
+## [2.1.1](https://github.com/ReedD/dadoune.com/compare/v2.1.0...v2.1.1) (2018-08-25)
+
+
+### Bug Fixes
+
+* **build:** Fix missing cache behavior ([0ac5fdb](https://github.com/ReedD/dadoune.com/commit/0ac5fdb))
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/ReedD/dadoune.com/compare/v2.0.12...v2.1.0) (2018-08-25)
 
