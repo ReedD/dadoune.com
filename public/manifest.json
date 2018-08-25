@@ -3,7 +3,7 @@
   "short_name": "Dadoune",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "display": "browser",
+  "display": "fullscreen",
   "Scope": "/",
   "start_url": "/",
   "icons": [
