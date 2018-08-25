@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/ReedD/dadoune.com/compare/v2.0.12...v2.1.0) (2018-08-25)
+
+
+### Features
+
+* **build:** Don't force long ttl on non finger printed js ([0f29a2a](https://github.com/ReedD/dadoune.com/commit/0f29a2a))
+
+
+
 <a name="2.0.12"></a>
 ## [2.0.12](https://github.com/ReedD/dadoune.com/compare/v2.0.11...v2.0.12) (2018-08-25)
 
