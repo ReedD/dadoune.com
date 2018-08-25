@@ -1,23 +1,23 @@
 import React from 'react';
-import { Head, withRouteData } from 'react-static';
+import { Head, withRouteData, withSiteData } from 'react-static';
 import H1 from '../../components/H1';
 import H2 from '../../components/H2';
 import Link from '../../components/Link';
 import Section from '../../components/Section';
 import toDateString from '../../lib/toDateString';
-import { IBlog } from '../../types';
+import { IBlog, ISiteData } from '../../types';
 import Li from './Li';
 import Time from './Time';
 import Ul from './Ul';
 
-interface IBlogsProps {
+interface IBlogsProps extends ISiteData {
   blogs: IBlog[];
 }
 
-export default withRouteData(({ blogs }: IBlogsProps) => (
+const Blog: React.SFC<IBlogsProps> = ({ blogs, siteName }) => (
   <Section>
     <Head>
-      <title>Blogs</title>
+      <title>Blogs | {siteName}</title>
     </Head>
     <Ul>
       {blogs.map(blog => {
@@ -35,4 +35,6 @@ export default withRouteData(({ blogs }: IBlogsProps) => (
       })}
     </Ul>
   </Section>
-));
+);
+
+export default withSiteData(withRouteData(Blog));

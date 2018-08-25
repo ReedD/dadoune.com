@@ -28,7 +28,10 @@ export default {
   siteRoot: 'https://www.dadoune.com',
   entry: path.join(__dirname, 'src', 'index.tsx'),
   getSiteData: () => ({
-    title: 'React Static',
+    author: 'Reed Dadoune',
+    googleAnalytics: 'UA-48078670-1',
+    host: 'www.dadoune.com',
+    siteName: 'Reed Dadoune',
   }),
   getRoutes: async () => {
     const { data: repos } = await axios.get(

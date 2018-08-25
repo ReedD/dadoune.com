@@ -1,3 +1,10 @@
+export interface ISiteData {
+  author: string;
+  googleAnalytics: string;
+  host: string;
+  siteName: string;
+}
+
 export interface IBlog {
   body: string;
   publishedAt: string;
