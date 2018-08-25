@@ -15,6 +15,7 @@ const Content = styled.div`
 
 const App: React.SFC<ISiteData> = ({ author, siteName, googleAnalytics }) => {
   const description = `${author}'s blog and project portfolio`;
+  const addAnalytics = /node|production/i.test(process.env.REACT_STATIC_ENV);
   return (
     <div>
       <Head>
@@ -36,16 +37,18 @@ const App: React.SFC<ISiteData> = ({ author, siteName, googleAnalytics }) => {
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
           type="text/css"
         />
-        <script>
-          {`
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-          ga('create', '${googleAnalytics}', 'auto');
-          ga('send', 'pageview');
-        `.replace(/\s+/g, ' ')}
-        </script>
+        {addAnalytics && (
+          <script>
+            {`
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+              ga('create', '${googleAnalytics}', 'auto');
+              ga('send', 'pageview');
+            `.replace(/\s+/g, ' ')}
+          </script>
+        )}
       </Head>
       <Router>
         <Content>
