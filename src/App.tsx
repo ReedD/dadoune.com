@@ -18,15 +18,21 @@ const description = "Reed Dadoune's blog and project portfolio";
 const App = () => (
   <div>
     <Head>
-      <title>{title}</title>
+      <meta charSet="UTF-8" />
+      <link rel="canonical" href="https://www.dadoune.com/" />
+      <link rel="manifest" href="manifest.json" />
+      <meta name="author" content="Reed Dadoune" />
       <meta name="description" content={description} />
+      <meta name="robots" content="index, follow" />
       <meta name="theme-color" content="#ffffff" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta property="og:description" content={description} />
       <meta property="og:image" content="/icon-512x512.png" />
       <meta property="og:site_name" content="Reed Dadoune" />
       <meta property="og:title" content={title} />
       <meta property="og:type" content="website" />
-      <link rel="manifest" href="manifest.json" />
+      <title>Home | dadoune.com</title>
+      <title>{title}</title>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
@@ -48,12 +54,10 @@ const App = () => (
         <Route
           path="/"
           render={({ location }) => {
-            if (
-              typeof window !== 'undefined' &&
-              typeof window.ga === 'function'
-            ) {
-              window.ga('set', 'page', location.pathname + location.search);
-              window.ga('send', 'pageview');
+            const ga = typeof window !== 'undefined' && (window as any).ga;
+            if (ga) {
+              ga('set', 'page', location.pathname + location.search);
+              ga('send', 'pageview');
             }
             return null;
           }}
