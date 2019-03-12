@@ -44,7 +44,7 @@ export default () => {
       <SourceLink href="https://github.com/ReedD/dadoune.com">
         This site is open source on GitHub!
       </SourceLink>
-      <Copyright>&copy; 2012-2018 Reed Dadoune</Copyright>
+      <Copyright>&copy; 2012-2019 Reed Dadoune</Copyright>
     </Foot>
   );
 };
