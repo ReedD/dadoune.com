@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import SimpleLayout from '../layouts/SimpleLayout.astro';
+import Icon from '../components/Icon.astro';
+import pmbLight from '../assets/projects/pmb-light.png';
+import pmbDark from '../assets/projects/pmb-dark.png';
+import rbr from '../assets/projects/rbr.png';
+
+const projects = [
+  {
+    name: 'planmybackpack.com',
+    href: 'https://planmybackpack.com',
+    role: 'Side project, 2021 to present',
+    summary: 'A gear planner for ultralight backpacking.',
+    detail:
+      'Next.js and GraphQL over Postgres, with Prisma in between. Gear data is collected lazily through a queue: pages fall back across three extraction providers, and anything that can’t be parsed from markup goes to an LLM cleaning stage. Images and comments run through automated moderation. Terraform for infrastructure, and CI runs the suite against a real Postgres instead of mocks.',
+    stack: ['TypeScript', 'Next.js', 'GraphQL', 'Prisma', 'PostgreSQL', 'Redis', 'AWS', 'Terraform'],
+    // Ships light and dark variants, so this one follows the site theme.
+    image: pmbLight,
+    imageDark: pmbDark,
+    alt: 'The planmybackpack home page, with a pack list preview below the headline',
+  },
+  {
+    name: 'ritualbeautyroom.com',
+    href: 'https://ritualbeautyroom.com',
+    role: 'Built and maintained for my wife',
+    summary: 'The site for her permanent makeup studio.',
+    detail:
+      'A page per service, from microblading to brow lamination and lash lifts, plus reviews, a blog, gift cards, and booking through Square. Next.js on Vercel.',
+    stack: ['Next.js', 'TypeScript', 'Tailwind', 'Vercel'],
+    image: rbr,
+    alt: 'The Ritual Beauty Room home page',
+  },
+];
+---
+
+<SimpleLayout
+  title="A couple of sites I keep running."
+  intro="One is my wife’s business. The other is a passion project of mine."
+  pageTitle="Projects"
+  description="Side projects built and maintained by Reed Dadoune."
+>
+  {/*
+    Screenshot left, copy right, stacking on small screens. The shape is
+    lookbook's "Feature Sections / With product screenshot on left", with
+    Spotlight's hover backdrop kept so the whole row stays one click target.
+  */}
+  <ul role="list" class="space-y-20">
+    {
+      projects.map((project) => (
+        <li class="group relative">
+          <div class="absolute -inset-x-4 -inset-y-6 z-0 scale-95 bg-zinc-50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl dark:bg-zinc-800/50" />
+
+          <div class="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start lg:gap-12">
+            <div class="overflow-hidden rounded-xl bg-zinc-100 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/10 dark:bg-zinc-800 dark:ring-white/10">
+              <Image
+                src={project.image}
+                alt={project.alt}
+                width={1200}
+                sizes="(min-width: 1024px) 28rem, (min-width: 640px) 42rem, 100vw"
+                loading="lazy"
+                class:list={['w-full', project.imageDark && 'dark:hidden']}
+              />
+              {project.imageDark && (
+                <Image
+                  src={project.imageDark}
+                  alt={project.alt}
+                  width={1200}
+                  sizes="(min-width: 1024px) 28rem, (min-width: 640px) 42rem, 100vw"
+                  loading="lazy"
+                  class="hidden w-full dark:block"
+                />
+              )}
+            </div>
+
+            <div class="flex flex-col items-start">
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">{project.role}</p>
+
+              <h2 class="mt-2 text-base font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">
+                <a href={project.href}>
+                  <span class="absolute -inset-x-4 -inset-y-6 z-20 sm:-inset-x-6 sm:rounded-2xl" />
+                  <span class="relative z-10">{project.name}</span>
+                </a>
+              </h2>
+
+              <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{project.summary}</p>
+              <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400">{project.detail}</p>
+
+              <ul class="mt-6 flex flex-wrap gap-2">
+                {project.stack.map((tech) => (
+                  <li class="rounded-full bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+
+              <p class="mt-6 flex items-center text-sm font-medium text-zinc-400 transition group-hover:text-teal-500 dark:text-zinc-200">
+                <Icon name="link" class="h-6 w-6 flex-none" />
+                <span class="ml-2">{project.href.replace('https://', '')}</span>
+              </p>
+            </div>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</SimpleLayout>

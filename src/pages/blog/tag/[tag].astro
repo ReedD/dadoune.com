@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import SimpleLayout from '../../../layouts/SimpleLayout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { readingTime, slugTag } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const byTag = new Map<string, { label: string; posts: typeof posts }>();
+
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const key = slugTag(tag);
+      // First spelling encountered wins as the display label.
+      const entry = byTag.get(key) ?? { label: tag, posts: [] };
+      entry.posts.push(post);
+      byTag.set(key, entry);
+    }
+  }
+
+  return [...byTag].map(([tag, { label, posts }]) => ({
+    params: { tag },
+    props: {
+      label,
+      posts: posts.sort((a, b) => +b.data.date - +a.data.date),
+    },
+  }));
+}
+
+const { label, posts } = Astro.props;
+---
+
+<SimpleLayout
+  pageTitle={`${label} posts`}
+  title={label}
+  intro={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'} tagged ${label}.`}
+>
+  <div class="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
+    <div class="flex max-w-3xl flex-col space-y-16">
+      {
+        posts.map((post) => (
+          <PostCard
+            href={`/blog/${post.id}`}
+            title={post.data.title}
+            date={post.data.date}
+            description={post.data.subtitle}
+            readingTime={readingTime(post.body ?? '')}
+          />
+        ))
+      }
+    </div>
+    <p class="mt-16 max-w-3xl border-t border-zinc-100 pt-8 text-sm dark:border-zinc-700/40">
+      <a
+        href="/blog"
+        class="font-medium text-teal-500 transition hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-300"
+        >&larr; All posts</a
+      >
+    </p>
+  </div>
+</SimpleLayout>

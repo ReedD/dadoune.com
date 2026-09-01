@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
+import Icon from '../components/Icon.astro';
+import { socials } from '../lib/site';
+
+// Spotlight's home layout: a single column, the portrait living in the header
+// as the scroll-shrinking avatar rather than on the page, and the socials as a
+// horizontal icon row. The two-column version left the bottom-left empty.
+---
+
+<Base>
+  <Container class="mt-9">
+    <div class="max-w-2xl">
+      <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+        I&rsquo;m Reed, a software engineer.
+      </h1>
+      <p class="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+        I&rsquo;ve been tinkering with software since I was young and never really stopped. Most of
+        my career has been on the web, though a good part of it has been the layers underneath: data
+        pipelines, infrastructure, and a long stretch of native mobile. These days I&rsquo;m at
+        Spokeo, where I&rsquo;ve never had the same job twice.
+      </p>
+      <div class="mt-6 flex gap-6">
+        {
+          socials.map((s) => (
+            <a href={s.href} aria-label={s.label} class="group -m-1 p-1">
+              <Icon
+                name={s.icon}
+                class="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300"
+              />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</Base>
