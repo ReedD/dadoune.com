@@ -1,0 +1,74 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../lib/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Absolute or root-relative URL of a per-page social image. */
+  image?: string;
+}
+
+const { title, description = site.description, image } = Astro.props;
+
+const pageTitle = title ? `${title} - ${site.name}` : `${site.name} - ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
+const ogImage = new URL(image ?? '/images/reed.jpg', Astro.site ?? site.url);
+---
+
+<!doctype html>
+<html lang="en" class="h-full antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/images/icon-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Resolve the theme before first paint so dark mode never flashes. -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* storage unavailable: fall back to the light default */
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="flex h-full bg-zinc-50 dark:bg-black">
+    <div class="flex w-full">
+      <!-- The raised "sheet" the content sits on, per Spotlight's Layout. -->
+      <div class="fixed inset-0 flex justify-center sm:px-8">
+        <div class="flex w-full max-w-7xl lg:px-8">
+          <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+        </div>
+      </div>
+
+      <div class="relative flex w-full flex-col">
+        <Header />
+        <main class="flex-auto">
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    </div>
+  </body>
+</html>

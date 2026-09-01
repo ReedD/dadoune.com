@@ -1,0 +1,87 @@
+---
+import Base from './Base.astro';
+import Container from '../components/Container.astro';
+import Icon from '../components/Icon.astro';
+import { formatDate, slugTag } from '../lib/site';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  date: Date;
+  tags?: string[];
+  readingTime: number;
+}
+
+const { title, subtitle, date, tags = [], readingTime } = Astro.props;
+
+// Every post here predates the current site. Say so plainly rather than
+// letting a 2014 how-to read as current advice.
+const age = new Date().getFullYear() - date.getUTCFullYear();
+---
+
+<Base title={title} description={subtitle}>
+  <Container class="mt-16 lg:mt-32">
+    <div class="xl:relative">
+      <div class="mx-auto max-w-2xl">
+        <a
+          href="/blog"
+          aria-label="Back to the blog"
+          class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 transition lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-0 xl:mt-0 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:hover:border-zinc-700 dark:hover:ring-white/20"
+        >
+          <Icon
+            name="arrow-left"
+            class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"
+          />
+        </a>
+
+        <article>
+          <header class="flex flex-col">
+            <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+              {title}
+            </h1>
+            {subtitle && <p class="mt-4 text-base text-zinc-600 dark:text-zinc-400">{subtitle}</p>}
+            <time
+              datetime={date.toISOString()}
+              class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500"
+            >
+              <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+              <span class="ml-3">{formatDate(date)}</span>
+              <span class="ml-2">&middot; {readingTime} min read</span>
+            </time>
+          </header>
+
+          {
+            age >= 5 && (
+              <aside class="mt-8 rounded-2xl border border-zinc-100 p-4 text-sm text-zinc-600 dark:border-zinc-700/40 dark:text-zinc-400">
+                <strong class="font-semibold text-zinc-800 dark:text-zinc-100">From the archive.</strong>{' '}
+                Written in {date.getUTCFullYear()}, about {age} years ago. The tools and versions
+                described here have moved on; it is kept online because the links still point somewhere.
+              </aside>
+            )
+          }
+
+          <div
+            class="prose prose-zinc mt-8 max-w-none dark:prose-invert prose-a:font-medium prose-a:text-teal-600 prose-a:no-underline hover:prose-a:underline dark:prose-a:text-teal-400 prose-pre:rounded-2xl prose-pre:ring-1 prose-pre:ring-zinc-900/10 dark:prose-pre:ring-white/10 prose-img:rounded-2xl"
+          >
+            <slot />
+          </div>
+
+          {
+            tags.length > 0 && (
+              <div class="mt-12 flex flex-wrap gap-2 border-t border-zinc-100 pt-8 dark:border-zinc-700/40">
+                {tags.map((tag) => (
+                  <a
+                    href={`/blog/tag/${slugTag(tag)}`}
+                    class="rounded-full bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600 transition hover:text-teal-500 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:text-teal-400"
+                  >
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )
+          }
+        </article>
+      </div>
+    </div>
+  </Container>
+</Base>

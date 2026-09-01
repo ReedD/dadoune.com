@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import SimpleLayout from '../../layouts/SimpleLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { readingTime, slugTag } from '../../lib/site';
+
+const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date);
+
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b));
+
+const years = [...new Set(posts.map((p) => p.data.date.getUTCFullYear()))].sort((a, b) => b - a);
+---
+
+<SimpleLayout
+  pageTitle="Blog"
+  title="Notes from a decade of building things."
+  intro={`An archive of ${posts.length} posts written between ${Math.min(...years)} and ${Math.max(...years)}, mostly about containers, AWS, and whatever build tool I was wrestling with that year. Nothing here has been rewritten to look current, and the dates are the point.`}
+>
+  <div class="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
+    <div class="flex max-w-3xl flex-col space-y-16">
+      {
+        posts.map((post) => (
+          <PostCard
+            href={`/blog/${post.id}`}
+            title={post.data.title}
+            date={post.data.date}
+            description={post.data.subtitle}
+            readingTime={readingTime(post.body ?? '')}
+          />
+        ))
+      }
+    </div>
+
+    {
+      tags.length > 0 && (
+        <div class="mt-16 max-w-3xl border-t border-zinc-100 pt-8 dark:border-zinc-700/40">
+          <h2 class="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Browse by tag</h2>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <a
+                href={`/blog/tag/${slugTag(tag)}`}
+                class="rounded-full bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600 transition hover:text-teal-500 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:text-teal-400"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+</SimpleLayout>

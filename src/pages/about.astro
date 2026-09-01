@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
+import Icon from '../components/Icon.astro';
+import { site, socials } from '../lib/site';
+---
+
+<Base title="About" description="Reed Dadoune, software engineer.">
+  <Container class="mt-16 sm:mt-32">
+    <div class="grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-y-12">
+      <div class="lg:pl-20">
+        <div class="max-w-xs px-2.5 lg:max-w-none">
+          <img
+            src="/images/reed.jpg"
+            alt="Reed Dadoune"
+            class="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800"
+          />
+        </div>
+      </div>
+
+      <div class="lg:order-first lg:row-span-2">
+        <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+          I&rsquo;m Reed Dadoune. I build things that run quietly.
+        </h1>
+        <div class="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
+          <p>
+            I write software for the web, mostly backend and infrastructure. TypeScript and Node for
+            the application layer, Docker and AWS underneath, and a persistent weakness for the kind
+            of small utility that does one thing and then gets out of the way.
+          </p>
+          <p>
+            Most of what I&rsquo;ve published started as a problem I hit on a real project: a docker
+            ambassador that could actually resolve DNS, an asset manager for switching between dev
+            and production bundles, a TypeScript implementation of Glicko-2. None of them are
+            frameworks. All of them are short.
+          </p>
+          <p>
+            The blog here is an archive. It covers 2014 through 2017, when I was writing up whatever
+            I&rsquo;d just figured out about Thumbor, or Compose, or getting CodePipeline to deploy a
+            static site. Some of it is genuinely dated now. I&rsquo;ve left the dates visible rather
+            than quietly refreshing the posts, because a 2014 answer marked 2014 is more useful than
+            a 2014 answer pretending to be current.
+          </p>
+          <p>
+            This site is open source, like the last three versions of it were.{' '}
+            <a
+              href={site.repo}
+              class="font-medium text-teal-600 transition hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
+              >The source is on GitHub</a
+            >.
+          </p>
+        </div>
+      </div>
+
+      <div class="lg:pl-20">
+        <ul role="list">
+          {
+            socials
+              .filter((s) => s.icon !== 'mail')
+              .map((s, i) => (
+                <li class:list={['flex', i > 0 && 'mt-4']}>
+                  <a
+                    href={s.href}
+                    class="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+                  >
+                    <Icon
+                      name={s.icon}
+                      class="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500"
+                    />
+                    <span class="ml-4">{s.label}</span>
+                  </a>
+                </li>
+              ))
+          }
+          <li class="mt-8 flex border-t border-zinc-100 pt-8 dark:border-zinc-700/40">
+            <a
+              href={`mailto:${site.email}`}
+              class="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+            >
+              <Icon
+                name="mail"
+                class="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500"
+              />
+              <span class="ml-4">{site.email}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </Container>
+</Base>

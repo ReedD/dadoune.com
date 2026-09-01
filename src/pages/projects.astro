@@ -1,0 +1,50 @@
+---
+import SimpleLayout from '../layouts/SimpleLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getRepos, languageColors } from '../lib/projects';
+
+const { repos } = await getRepos();
+---
+
+<SimpleLayout
+  title="Things I’ve built and left running."
+  intro="Mostly small, single-purpose libraries: a rating system, some build tooling, a docker relay that solved one annoying problem. Pulled straight from GitHub at build time, so this list is as current as the last deploy."
+  description="Open-source projects by Reed Dadoune."
+>
+  <ul role="list" class="grid grid-cols-1 gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      repos.map((repo) => (
+        <li class="group relative flex flex-col items-start">
+          <div class="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+            <span
+              class="h-3 w-3 rounded-full"
+              style={`background-color: ${repo.language ? (languageColors[repo.language] ?? '#94a3b8') : '#94a3b8'}`}
+              aria-hidden="true"
+            />
+          </div>
+
+          <h2 class="mt-6 text-base font-semibold text-zinc-800 dark:text-zinc-100">
+            <div class="absolute -inset-x-4 -inset-y-6 z-0 scale-95 bg-zinc-50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl dark:bg-zinc-800/50" />
+            <a href={repo.html_url}>
+              <span class="absolute -inset-x-4 -inset-y-6 z-20 sm:-inset-x-6 sm:rounded-2xl" />
+              <span class="relative z-10">{repo.name}</span>
+            </a>
+          </h2>
+
+          <p class="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            {repo.description ?? 'No description.'}
+          </p>
+
+          {/* w-full so `ml-auto` on the language has room; the li is items-start. */}
+          <p class="relative z-10 mt-6 flex w-full items-center text-sm font-medium text-zinc-400 transition group-hover:text-teal-500 dark:text-zinc-200">
+            <Icon name="link" class="h-6 w-6 flex-none" />
+            <span class="ml-2">github.com</span>
+            {repo.language && (
+              <span class="ml-auto text-xs text-zinc-400 dark:text-zinc-500">{repo.language}</span>
+            )}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</SimpleLayout>

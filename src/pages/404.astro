@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
+---
+
+<Base title="Not found" description="That page doesn't exist.">
+  <Container class="flex h-full items-center pt-16 sm:pt-32">
+    <div class="flex flex-col items-center">
+      <p class="text-base font-semibold text-zinc-400 dark:text-zinc-500">404</p>
+      <h1 class="mt-4 text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+        Page not found
+      </h1>
+      <p class="mt-4 text-base text-zinc-600 dark:text-zinc-400">
+        Sorry, that page doesn&rsquo;t exist. It may never have, or it may have moved in one of this
+        site&rsquo;s several rebuilds.
+      </p>
+      <a
+        href="/"
+        class="mt-4 inline-flex items-center justify-center gap-2 rounded-md bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 outline-offset-2 transition hover:bg-zinc-100 active:text-zinc-900/60 active:transition-none dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+      >
+        Go back home
+      </a>
+    </div>
+  </Container>
+</Base>

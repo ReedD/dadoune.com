@@ -1,63 +1,25 @@
 {
   "name": "dadoune.com",
-  "version": "2.2.10",
-  "main": "index.js",
+  "version": "3.0.0",
+  "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "react-static build",
-    "prettier": "yarn run prettier:ts -- \"./src/**/*.{ts,tsx}\"",
-    "prettier:ts": "prettier --single-quote --trailing-comma all --write",
-    "release": "standard-version && git push --follow-tags origin develop && git checkout master && git merge develop  --no-edit && git push && git checkout develop",
-    "serve": "serve dist -p 3000",
-    "stage": "react-static build --staging",
-    "start": "react-static start"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,tsx,json}": [
-      "prettier --single-quote --trailing-comma all --write",
-      "git add"
-    ]
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "dayjs": "^1.7.5",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-router": "^4.2.0",
-    "react-static": "^5.9.7",
-    "styled-components": "^3.4.2",
-    "styled-normalize": "^8.0.0"
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.10",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/node": "^9.4.7",
-    "@types/react": "^16.4.11",
-    "@types/react-dom": "^16.0.7",
-    "@types/react-hot-loader": "^3.0.6",
-    "@types/react-router": "^4.0.16",
-    "@types/webpack-env": "^1.13.5",
-    "babel-plugin-styled-components": "^1.5.1",
-    "contentful": "^7.0.0",
-    "dotenv": "^6.0.0",
-    "highlight.js": "^9.12.0",
-    "husky": "^0.14.3",
-    "imagemin-webpack-plugin": "^2.2.0",
-    "lint-staged": "^7.2.2",
-    "marked": "^0.5.0",
-    "serve": "^10.0.0",
-    "standard-version": "^4.4.0",
-    "ts-loader": "^3.5.0",
-    "typescript": "^3.0.1",
-    "workbox-build": "^3.4.1"
-  },
-  "prettier": {
-    "useTabs": false,
-    "singleQuote": true,
-    "trailingComma": "all"
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }

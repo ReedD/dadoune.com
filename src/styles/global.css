@@ -1,0 +1,78 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+
+/* Class-based dark mode, matching Spotlight's `dark` variant. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 3.5rem;
+}
+
+/* The page ground sits behind the app shell so the sticky header
+   has something to blur against at every scroll position. */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Shiki emits both themes as custom properties. Swap the token colours per
+   mode, but paint the background only on the <pre>. Putting it on every span
+   as well would draw a solid box behind each token. */
+.astro-code {
+  background-color: var(--shiki-light-bg) !important;
+}
+
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light) !important;
+}
+
+.dark .astro-code {
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+}
+
+/* Tailwind Typography wraps inline <code> in literal backticks by default. */
+.prose :where(code):not(:where([class~='not-prose'] *))::before,
+.prose :where(code):not(:where([class~='not-prose'] *))::after {
+  content: none;
+}
+
+/* Give inline code a plate so it still reads as code without the backticks. */
+.prose :where(code):not(:where(pre *, [class~='not-prose'] *)) {
+  border-radius: 0.25rem;
+  background-color: var(--color-zinc-100);
+  padding: 0.125rem 0.375rem;
+  font-weight: 500;
+}
+
+.dark .prose :where(code):not(:where(pre *, [class~='not-prose'] *)) {
+  background-color: --alpha(var(--color-zinc-800) / 60%);
+}

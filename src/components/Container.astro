@@ -1,0 +1,49 @@
+---
+/**
+ * Spotlight's two-level container: an outer max-w-7xl gutter and an inner
+ * max-w-2xl/lg:max-w-5xl measure. Split into Outer/Inner variants because the
+ * footer needs the border to span the outer width while its content stays
+ * aligned to the inner one.
+ */
+interface Props {
+  class?: string;
+  variant?: 'full' | 'outer' | 'inner';
+  style?: string;
+}
+
+const { class: className = '', variant = 'full', style } = Astro.props;
+---
+
+{
+  variant === 'full' && (
+    <div class:list={['sm:px-8', className]} style={style}>
+      <div class="mx-auto w-full max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <slot />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{
+  variant === 'outer' && (
+    <div class:list={['sm:px-8', className]} style={style}>
+      <div class="mx-auto w-full max-w-7xl lg:px-8">
+        <slot />
+      </div>
+    </div>
+  )
+}
+
+{
+  variant === 'inner' && (
+    <div class:list={['relative px-4 sm:px-8 lg:px-12', className]} style={style}>
+      <div class="mx-auto max-w-2xl lg:max-w-5xl">
+        <slot />
+      </div>
+    </div>
+  )
+}
