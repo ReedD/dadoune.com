@@ -49,10 +49,21 @@ jobs:
       - name: Deploy
         run: ./scripts/deploy.sh
 
+      # A smoke test, not a gate on the deploy itself, which has already
+      # happened by this point. It retries and checks every path before
+      # failing, so one transient TLS reset from the CDN cannot fail a deploy
+      # that worked, and a real outage reports every affected URL at once.
       - name: Verify
         run: |
+          fail=0
           for path in / /projects /blog /blog/docker-ambassador; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' -L "https://www.dadoune.com${path}")
+            url="https://www.dadoune.com${path}"
+            # `|| echo 000` matters: the step runs under `bash -e`, so without
+            # it a non-zero curl exit aborts before the status is compared.
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -L \
+                     --retry 5 --retry-delay 2 --retry-all-errors \
+                     --connect-timeout 10 --max-time 30 "$url" || echo 000)
             printf '%s %s\n' "$code" "$path"
-            [ "$code" = "200" ] || exit 1
+            [ "$code" = "200" ] || fail=1
           done
+          exit $fail
