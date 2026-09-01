@@ -13,6 +13,12 @@ variable "github_repo" {
   default     = "ReedD/dadoune.com"
 }
 
+variable "deploy_environment" {
+  description = "GitHub Environment the deploy job declares. It determines the OIDC subject claim."
+  type        = string
+  default     = "production"
+}
+
 variable "deploy_branch" {
   description = "Only pushes to this branch may assume the role."
   type        = string
@@ -35,12 +41,25 @@ data "aws_iam_policy_document" "github_assume_role" {
       values   = ["sts.amazonaws.com"]
     }
 
-    # Scoped to one branch of one repo. Without this, any repo on GitHub could
-    # assume the role.
+    # Scoped to one repo. Without this, any repo on GitHub could assume it.
+    #
+    # Note the subject form. A job that declares `environment:` gets
+    # "repo:OWNER/NAME:environment:ENV", NOT "repo:OWNER/NAME:ref:refs/heads/BRANCH".
+    # Pinning the ref form while the workflow declares an environment is why
+    # the first run failed with "Not authorized to perform
+    # sts:AssumeRoleWithWebIdentity".
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:ref:refs/heads/${var.deploy_branch}"]
+      values   = ["repo:${var.github_repo}:environment:${var.deploy_environment}"]
+    }
+
+    # The environment subject alone says nothing about which branch ran, so
+    # pin the branch separately. Both must hold.
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:ref"
+      values   = ["refs/heads/${var.deploy_branch}"]
     }
   }
 }
