@@ -1,111 +1,74 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
-import PostCard from '../components/PostCard.astro';
 import Icon from '../components/Icon.astro';
-import { readingTime, site, socials } from '../lib/site';
+import { site, socials } from '../lib/site';
 
-const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date);
-const recent = posts.slice(0, 4);
+// Home and About are one page. There is not enough to say to justify two.
 ---
 
 <Base>
-  <Container class="mt-9">
-    <div class="max-w-2xl">
-      <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
-        Software engineer, infrastructure tinkerer, code enthusiast.
-      </h1>
-      <p class="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-        I&rsquo;m Reed. I build and operate systems for the web, mostly in TypeScript and mostly on
-        top of containers. This site is where I keep my open-source projects and an archive of
-        things I figured out along the way.
-      </p>
-      <div class="mt-6 flex gap-6">
-        {
-          socials.map((s) => (
-            <a href={s.href} aria-label={s.label} class="group -m-1 p-1">
-              <Icon
-                name={s.icon}
-                class="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300"
-              />
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </Container>
-
-  <Container class="mt-24 md:mt-28">
-    <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
-      <div class="flex flex-col gap-16">
-        {
-          recent.map((post) => (
-            <PostCard
-              href={`/blog/${post.id}`}
-              title={post.data.title}
-              date={post.data.date}
-              description={post.data.subtitle}
-              readingTime={readingTime(post.body ?? '')}
-            />
-          ))
-        }
-        <a
-          href="/blog"
-          class="text-sm font-medium text-teal-500 transition hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-300"
-        >
-          All {posts.length} posts &rarr;
-        </a>
+  <Container class="mt-16 sm:mt-32">
+    <div class="grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-y-12">
+      <div class="lg:pl-20">
+        <div class="max-w-xs px-2.5 lg:max-w-none">
+          <img
+            src="/images/reed.jpg"
+            alt="Reed Dadoune"
+            width="1000"
+            height="1000"
+            class="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800"
+          />
+        </div>
       </div>
 
-      <div class="space-y-10 lg:pl-16 xl:pl-24">
-        <div class="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
-          <h2 class="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            <Icon name="rss" class="h-6 w-6 flex-none fill-zinc-400 dark:fill-zinc-500" />
-            <span class="ml-3">Follow along</span>
-          </h2>
-          <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            No newsletter, no tracking pixel. There&rsquo;s a feed if you want one, and everything
-            here is on GitHub.
+      <div class="lg:order-first lg:row-span-2">
+        <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+          I&rsquo;m Reed, a software engineer.
+        </h1>
+        <div class="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
+          <p>
+            I&rsquo;ve been tinkering with software since I was young and never really stopped.
+            Most of my career has been on the web, though a good part of it has been the layers
+            underneath: data pipelines, infrastructure, and a long stretch of native mobile.
+            These days I&rsquo;m at Spokeo, where I&rsquo;ve never had the same job twice.
           </p>
-          <div class="mt-6 flex gap-3">
-            <a
-              href="/rss.xml"
-              class="inline-flex items-center justify-center gap-2 rounded-md bg-zinc-800 px-3 py-2 text-sm font-semibold text-zinc-100 outline-offset-2 transition hover:bg-zinc-700 active:bg-zinc-800 active:text-zinc-100/70 active:transition-none dark:bg-zinc-700 dark:hover:bg-zinc-600"
-            >
-              RSS feed
-            </a>
-            <a
-              href={`https://github.com/${site.github}`}
-              class="inline-flex items-center justify-center gap-2 rounded-md bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 outline-offset-2 transition hover:bg-zinc-100 active:text-zinc-900/60 active:transition-none dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-            >
-              GitHub
-            </a>
-          </div>
         </div>
+      </div>
 
-        <div class="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
-          <h2 class="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            <Icon name="briefcase" class="h-6 w-6 flex-none" />
-            <span class="ml-3">What I work on</span>
-          </h2>
-          <ul class="mt-6 space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
-            <li>
-              <span class="font-medium text-zinc-900 dark:text-zinc-100">Backend &amp; infra</span>
-              <br />Node and TypeScript services, Docker, AWS.
-            </li>
-            <li>
-              <span class="font-medium text-zinc-900 dark:text-zinc-100">Open source</span>
-              <br />Small, focused libraries. Rating systems, build tooling, crawlers.
-            </li>
-          </ul>
-          <a
-            href="/projects"
-            class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-md bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 outline-offset-2 transition hover:bg-zinc-100 active:text-zinc-900/60 active:transition-none dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-          >
-            See the projects
-          </a>
-        </div>
+      <div class="lg:pl-20">
+        <ul role="list">
+          {
+            socials
+              .filter((s) => s.icon !== 'mail')
+              .map((s, i) => (
+                <li class:list={['flex', i > 0 && 'mt-4']}>
+                  <a
+                    href={s.href}
+                    class="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+                  >
+                    <Icon
+                      name={s.icon}
+                      class="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500"
+                    />
+                    <span class="ml-4">{s.label}</span>
+                  </a>
+                </li>
+              ))
+          }
+          <li class="mt-8 flex border-t border-zinc-100 pt-8 dark:border-zinc-700/40">
+            <a
+              href={`mailto:${site.email}`}
+              class="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+            >
+              <Icon
+                name="mail"
+                class="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500"
+              />
+              <span class="ml-4">{site.email}</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </Container>

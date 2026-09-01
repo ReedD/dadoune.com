@@ -4,7 +4,6 @@ import Icon from './Icon.astro';
 import { nav } from '../lib/site';
 
 const path = Astro.url.pathname;
-const isHomePage = path === '/';
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 ---
 
@@ -12,60 +11,23 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
   class="pointer-events-none relative z-50 flex flex-none flex-col"
   style="height: var(--header-height); margin-bottom: var(--header-mb)"
 >
-  {
-    isHomePage && (
-      <>
-        <div data-avatar-anchor class="order-last mt-[calc(--spacing(16)-(--spacing(3)))]" />
-        <Container class="top-0 order-last -mb-3 pt-3" style="position: var(--header-position)">
-          <div class="top-(--avatar-top,--spacing(3)) w-full" style="position: var(--header-inner-position)">
-            <div class="relative">
-              {/* The ring that fades in once the avatar has shrunk to header size. */}
-              <div
-                class="absolute top-3 left-0 h-10 w-10 origin-left rounded-full bg-white/90 p-0.5 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm transition-opacity dark:bg-zinc-800/90 dark:ring-white/10"
-                style="opacity: var(--avatar-border-opacity, 0); transform: var(--avatar-border-transform)"
-              />
-              <a
-                href="/"
-                aria-label="Home"
-                class="pointer-events-auto block h-16 w-16 origin-left"
-                style="transform: var(--avatar-image-transform)"
-              >
-                <img
-                  src="/images/reed.jpg"
-                  alt=""
-                  width="64"
-                  height="64"
-                  class="h-16 w-16 rounded-full bg-zinc-100 object-cover dark:bg-zinc-800"
-                />
-              </a>
-            </div>
-          </div>
-        </Container>
-      </>
-    )
-  }
-
   <div data-header class="top-0 z-10 h-16 pt-6" style="position: var(--header-position)">
     <Container class="top-(--header-top,--spacing(6)) w-full" style="position: var(--header-inner-position)">
       <div class="relative flex gap-4">
         <div class="flex flex-1">
-          {
-            !isHomePage && (
-              <a
-                href="/"
-                aria-label="Home"
-                class="pointer-events-auto h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:ring-white/10"
-              >
-                <img
-                  src="/images/reed.jpg"
-                  alt=""
-                  width="36"
-                  height="36"
-                  class="h-9 w-9 rounded-full bg-zinc-100 object-cover dark:bg-zinc-800"
-                />
-              </a>
-            )
-          }
+          <a
+            href="/"
+            aria-label="Home"
+            class="pointer-events-auto h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:ring-white/10"
+          >
+            <img
+              src="/images/reed.jpg"
+              alt=""
+              width="36"
+              height="36"
+              class="h-9 w-9 rounded-full bg-zinc-100 object-cover dark:bg-zinc-800"
+            />
+          </a>
         </div>
 
         <div class="flex flex-1 justify-end md:justify-center">
@@ -165,8 +127,6 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
   </div>
 </div>
 
-{isHomePage && <div class="flex-none" style="height: var(--content-offset)" />}
-
 <script>
   // --- Theme toggle -------------------------------------------------------
   const toggle = document.querySelector('[data-theme-toggle]');
@@ -195,34 +155,31 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
     if (e.key === 'Escape' && panel && !panel.hidden) setMenu(false);
   });
 
-  // --- Scroll-driven header + avatar -------------------------------------
-  // Ported from Spotlight: on the home page the 64px avatar shrinks into a
-  // 36px header pill as you scroll, and the header pins itself at the top.
+  // --- Sticky header -----------------------------------------------------
+  // Spotlight drives the header offsets from CSS custom properties. With the
+  // oversized home-page avatar gone there is no shrink animation left, just a
+  // header that pins itself to the top on scroll.
   const headerEl = document.querySelector<HTMLElement>('[data-header]');
-  const avatarAnchor = document.querySelector<HTMLElement>('[data-avatar-anchor]');
-  const isHomePage = Boolean(avatarAnchor);
 
   if (headerEl) {
     const root = document.documentElement;
-    const clamp = (n: number, a: number, b: number) =>
-      Math.min(Math.max(n, Math.min(a, b)), Math.max(a, b));
     const setProp = (k: string, v: string) => root.style.setProperty(k, v);
     const rmProp = (k: string) => root.style.removeProperty(k);
-
-    let isInitial = true;
     const upDelay = 64;
+    let isInitial = true;
 
     function updateHeaderStyles() {
-      const downDelay = avatarAnchor?.offsetTop ?? 0;
       const { top, height } = headerEl!.getBoundingClientRect();
-      const scrollY = clamp(window.scrollY, 0, document.body.scrollHeight - window.innerHeight);
+      const scrollY = Math.min(
+        Math.max(window.scrollY, 0),
+        Math.max(document.body.scrollHeight - window.innerHeight, 0),
+      );
 
       if (isInitial) setProp('--header-position', 'sticky');
-      setProp('--content-offset', `${downDelay}px`);
 
-      if (isInitial || scrollY < downDelay) {
-        setProp('--header-height', `${downDelay + height}px`);
-        setProp('--header-mb', `${-downDelay}px`);
+      if (isInitial || scrollY < 0) {
+        setProp('--header-height', `${height}px`);
+        setProp('--header-mb', '0px');
       } else if (top + height < -upDelay) {
         const offset = Math.max(height, scrollY - upDelay);
         setProp('--header-height', `${offset}px`);
@@ -232,49 +189,19 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
         setProp('--header-mb', `${-scrollY}px`);
       }
 
-      if (top === 0 && scrollY > 0 && scrollY >= downDelay) {
+      if (top === 0 && scrollY > 0) {
         setProp('--header-inner-position', 'fixed');
         rmProp('--header-top');
-        rmProp('--avatar-top');
       } else {
         rmProp('--header-inner-position');
         setProp('--header-top', '0px');
-        setProp('--avatar-top', '0px');
       }
-    }
 
-    function updateAvatarStyles() {
-      if (!isHomePage) return;
-      const downDelay = avatarAnchor!.offsetTop;
-      const fromScale = 1;
-      const toScale = 36 / 64;
-      const fromX = 0;
-      const toX = 2 / 16;
-
-      const scrollY = downDelay - window.scrollY;
-
-      let scale = (scrollY * (fromScale - toScale)) / downDelay + toScale;
-      scale = clamp(scale, fromScale, toScale);
-
-      let x = (scrollY * (fromX - toX)) / downDelay + toX;
-      x = clamp(x, fromX, toX);
-
-      setProp('--avatar-image-transform', `translate3d(${x}rem, 0, 0) scale(${scale})`);
-
-      const borderScale = 1 / (toScale / scale);
-      const borderX = (-toX + x) * borderScale;
-      setProp('--avatar-border-transform', `translate3d(${borderX}rem, 0, 0) scale(${borderScale})`);
-      setProp('--avatar-border-opacity', scale === toScale ? '1' : '0');
-    }
-
-    function updateStyles() {
-      updateHeaderStyles();
-      updateAvatarStyles();
       isInitial = false;
     }
 
-    updateStyles();
-    window.addEventListener('scroll', updateStyles, { passive: true });
-    window.addEventListener('resize', updateStyles);
+    updateHeaderStyles();
+    window.addEventListener('scroll', updateHeaderStyles, { passive: true });
+    window.addEventListener('resize', updateHeaderStyles);
   }
 </script>

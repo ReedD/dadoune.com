@@ -1,20 +1,21 @@
 export const site = {
   name: 'Reed Dadoune',
   title: 'Reed Dadoune',
-  tagline: 'Code Enthusiast',
+  tagline: 'Software Engineer',
   url: 'https://www.dadoune.com',
   email: 'reed@dadoune.com',
   github: 'ReedD',
   repo: 'https://github.com/ReedD/dadoune.com',
   description:
-    'Reed Dadoune is a software engineer writing about infrastructure, containers, and the web.',
+    'Reed Dadoune is a principal software engineer working on web performance, rendering at scale, and data platforms.',
 } as const;
 
-export const nav = [
-  { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/projects', label: 'Projects' },
-] as const;
+// Drives both the header and the footer.
+//
+// /blog is deliberately absent: the posts stay published and every old URL
+// still resolves, they just are not advertised anywhere on the site. Do not
+// re-add it without meaning to.
+export const nav = [{ href: '/projects', label: 'Projects' }] as const;
 
 export const socials = [
   { href: `https://github.com/${site.github}`, label: 'GitHub', icon: 'github' },

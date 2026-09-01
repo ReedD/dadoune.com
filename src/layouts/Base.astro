@@ -55,7 +55,7 @@ const ogImage = new URL(image ?? '/images/reed.jpg', Astro.site ?? site.url);
 
   <body class="flex h-full bg-zinc-50 dark:bg-black">
     <div class="flex w-full">
-      <!-- The raised "sheet" the content sits on, per Spotlight's Layout. -->
+      {/* The raised sheet the content sits on. Astro comments are compiled away; an HTML comment would ship on every page. */}
       <div class="fixed inset-0 flex justify-center sm:px-8">
         <div class="flex w-full max-w-7xl lg:px-8">
           <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
