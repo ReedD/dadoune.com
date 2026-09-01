@@ -1,0 +1,58 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+  # Lets you re-run a deploy from the Actions tab without pushing.
+  workflow_dispatch:
+
+# No long-lived AWS keys: the job trades this token for an IAM role.
+permissions:
+  id-token: write
+  contents: read
+
+# Never let two deploys sync the same bucket at once. Queue instead of
+# cancelling, so an in-flight upload is not left half-applied.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.dadoune.com/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Gate the deploy on types and templates being sound.
+      - name: Check
+        run: npm run check
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::375003816393:role/dadoune-com-github-deploy
+          aws-region: us-east-1
+
+      # Builds, syncs with per-file cache headers, invalidates CloudFront.
+      # Same script used for local deploys, so the two cannot drift.
+      - name: Deploy
+        run: ./scripts/deploy.sh
+
+      - name: Verify
+        run: |
+          for path in / /projects /blog /blog/docker-ambassador; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -L "https://www.dadoune.com${path}")
+            printf '%s %s\n' "$code" "$path"
+            [ "$code" = "200" ] || exit 1
+          done

@@ -1,7 +1,9 @@
 ---
 import Container from './Container.astro';
 import Icon from './Icon.astro';
+import { Image } from 'astro:assets';
 import { nav } from '../lib/site';
+import avatar from '../assets/reed.jpg';
 
 const path = Astro.url.pathname;
 const isHomePage = path === '/';
@@ -30,11 +32,11 @@ const isActive = (href: string) =>
                 class="pointer-events-auto block h-16 w-16 origin-left"
                 style="transform: var(--avatar-image-transform)"
               >
-                <img
-                  src="/images/reed.jpg"
+                <Image
+                  src={avatar}
                   alt=""
-                  width="64"
-                  height="64"
+                  width={192}
+                  loading="eager"
                   class="h-16 w-16 rounded-full bg-zinc-100 object-cover dark:bg-zinc-800"
                 />
               </a>
@@ -55,11 +57,11 @@ const isActive = (href: string) =>
             aria-label="Home"
             class="pointer-events-auto h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:ring-white/10"
           >
-            <img
-              src="/images/reed.jpg"
+            <Image
+              src={avatar}
               alt=""
-              width="36"
-              height="36"
+              width={192}
+              loading="eager"
               class="h-9 w-9 rounded-full bg-zinc-100 object-cover dark:bg-zinc-800"
             />
           </a>

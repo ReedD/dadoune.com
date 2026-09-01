@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../lib/site';
+import avatar from '../assets/reed.jpg';
 import '../styles/global.css';
 
 interface Props {
@@ -15,7 +16,9 @@ const { title, description = site.description, image } = Astro.props;
 
 const pageTitle = title ? `${title} - ${site.name}` : `${site.name} - ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
-const ogImage = new URL(image ?? '/images/reed.jpg', Astro.site ?? site.url);
+// Hashed too, so a new photo invalidates the social preview instead of
+// leaving scrapers on a stale copy at a fixed URL.
+const ogImage = new URL(image ?? avatar.src, Astro.site ?? site.url);
 ---
 
 <!doctype html>
