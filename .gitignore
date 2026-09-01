@@ -13,3 +13,9 @@ dist/
 npm-debug.log*
 .vscode/
 .idea/
+
+# Terraform
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/tfplan
