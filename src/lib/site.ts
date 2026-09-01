@@ -15,7 +15,10 @@ export const site = {
 // /blog is deliberately absent: the posts stay published and every old URL
 // still resolves, they just are not advertised anywhere on the site. Do not
 // re-add it without meaning to.
-export const nav = [{ href: '/projects', label: 'Projects' }] as const;
+export const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+] as const;
 
 export const socials = [
   { href: `https://github.com/${site.github}`, label: 'GitHub', icon: 'github' },
