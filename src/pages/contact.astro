@@ -1,0 +1,368 @@
+---
+import SimpleLayout from '../layouts/SimpleLayout.astro';
+import Icon from '../components/Icon.astro';
+import { socials } from '../lib/site';
+
+// The title is Reed's. TODO(reed): the intro line below, the success message,
+// the validation messages and the message placeholder are still my words.
+
+// Posted to directly, so the form still works with scripting off. The script
+// below upgrades it: it validates in the page and swaps in a thank-you panel
+// rather than navigating anywhere.
+const endpoint = 'https://api.ezform.io/f/8MMGmPYCvs0R';
+
+// Routing rules on the ezform side can branch on this, so the wording here is
+// the wording you would write a rule against.
+const topics = [
+  'Work opportunity',
+  'Consulting or contract',
+  'Question about something I wrote',
+  'Something else',
+];
+
+// Spotlight's input treatment: a hairline outline in both modes, a soft teal
+// ring on focus, and a zinc-tinted shadow rather than a black one.
+const field = [
+  'block w-full appearance-none rounded-[calc(var(--radius-md)-1px)] bg-white px-3',
+  'py-[calc(--spacing(2)-1px)] text-zinc-900 shadow-md shadow-zinc-800/5',
+  'outline outline-zinc-900/10 placeholder:text-zinc-400 focus:ring-4',
+  'focus:ring-teal-500/10 focus:outline-teal-500 sm:text-sm dark:bg-zinc-700/15',
+  'dark:text-zinc-100 dark:outline-zinc-700 dark:focus:ring-teal-400/10',
+  'dark:focus:outline-teal-400',
+].join(' ');
+
+const label = 'block text-sm font-medium text-zinc-900 dark:text-zinc-100';
+const fieldError = 'mt-2 text-sm text-red-600 dark:text-red-400';
+
+// Where the failure panel sends someone whose message would not go through.
+const linkedin = socials.find((s) => s.icon === 'linkedin');
+
+// The same icon row the home page carries. The mail icon now points at this
+// page, so linking it from this page would just be a link to itself.
+const elsewhere = socials.filter((s) => s.icon !== 'mail');
+---
+
+<SimpleLayout
+  title="Get in touch."
+  intro="Work, consulting, or a question about something I wrote. Send it here and it reaches me."
+  pageTitle="Contact"
+  description="Send Reed Dadoune a message."
+>
+  <div class="max-w-2xl">
+    {/*
+      The form and the thank-you swap places in here. Both carry the same
+      transition, and the script fades one out before it brings the other in,
+      so the panel changes rather than the page.
+    */}
+    <div data-form-panel class="transition duration-150 ease-out motion-reduce:transition-none">
+      <form
+        action={endpoint}
+        method="POST"
+        data-contact-form
+        class="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40"
+      >
+        {/*
+          The spam trap. ezform has this form configured with `job_topic` as
+          its honeypot field, so anything that arrives with it filled in is
+          stored and never delivered. It is pulled out of view rather than
+          `display: none` because a bot that only reads the DOM has to be
+          able to find it.
+        */}
+        <div class="field-meta" aria-hidden="true">
+          <label>
+            Job topic
+            <input name="job_topic" type="text" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
+          <div>
+            <label for="name" class={label}>Name</label>
+            <div class="mt-2">
+              {/*
+                `required` and friends stay in the markup for the no-script
+                path, where the browser is the only thing checking. The
+                script sets novalidate on itself so its own messages win.
+              */}
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+                maxlength="200"
+                class={field}
+              />
+            </div>
+            <p id="name-error" data-error-for="name" hidden class={fieldError}></p>
+          </div>
+
+          <div>
+            <label for="email" class={label}>Email</label>
+            <div class="mt-2">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                maxlength="320"
+                class={field}
+              />
+            </div>
+            <p id="email-error" data-error-for="email" hidden class={fieldError}></p>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="topic" class={label}>Topic</label>
+            <div class="mt-2 grid grid-cols-1">
+              <select
+                id="topic"
+                name="topic"
+                required
+                class={`col-start-1 row-start-1 pr-8 ${field}`}
+              >
+                {topics.map((topic) => <option>{topic}</option>)}
+              </select>
+              <Icon
+                name="chevron-down"
+                class="pointer-events-none col-start-1 row-start-1 mr-3 h-auto w-2 self-center justify-self-end stroke-zinc-500 dark:stroke-zinc-400"
+              />
+            </div>
+            <p id="topic-error" data-error-for="topic" hidden class={fieldError}></p>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="message" class={label}>Message</label>
+            <div class="mt-2">
+              {/*
+                10,000 is ezform's own per-value ceiling. A longer body is
+                rejected as malformed and still answered 200, so catching it
+                here is the difference between a visible error and a message
+                that silently never arrives.
+              */}
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+                maxlength="10000"
+                placeholder="What you're working on, and what you need from me."
+                class={field}></textarea>
+            </div>
+            <p id="message-error" data-error-for="message" hidden class={fieldError}></p>
+          </div>
+        </div>
+
+        <div
+          data-send-error
+          hidden
+          role="alert"
+          class="mt-6 flex gap-3 rounded-lg bg-red-50 p-4 dark:bg-red-500/10"
+        >
+          <Icon name="warning" class="h-5 w-5 flex-none fill-red-500 dark:fill-red-400" />
+          <div class="text-sm">
+            <p class="font-medium text-red-800 dark:text-red-200">That didn&rsquo;t send.</p>
+            <p class="mt-1 text-red-700 dark:text-red-300">
+              Something went wrong between here and my inbox, and your message is still in the
+              form. Try again in a moment{
+                linkedin && (
+                  <>
+                    , or reach me on{' '}
+                    <a href={linkedin.href} class="font-medium underline underline-offset-2">
+                      LinkedIn
+                    </a>
+                  </>
+                )
+              }.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center gap-2 rounded-md bg-zinc-800 px-3 py-2 text-sm font-semibold text-zinc-100 outline-offset-2 transition hover:bg-zinc-700 active:bg-zinc-800 active:text-zinc-100/70 active:transition-none disabled:opacity-60 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-700 dark:active:text-zinc-100/70"
+          >
+            Send message
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {/*
+      Brought in once a scripted submission comes back. Without scripting the
+      browser navigates to ezform's own page instead and never sees this.
+    */}
+    <div
+      data-form-success
+      hidden
+      tabindex="-1"
+      class="translate-y-2 rounded-2xl border border-zinc-100 p-6 opacity-0 outline-none transition duration-150 ease-out motion-reduce:transition-none dark:border-zinc-700/40"
+    >
+      <h2 class="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <Icon name="check-circle" class="h-6 w-6 flex-none stroke-teal-500 dark:stroke-teal-400" />
+        <span class="ml-3">Message sent.</span>
+      </h2>
+      <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+        Thanks, it&rsquo;s in my inbox. I&rsquo;ll get back to you.
+      </p>
+    </div>
+
+  <div class="mt-6 flex gap-6">
+    {
+      elsewhere.map((s) => (
+        <a href={s.href} aria-label={s.label} class="group -m-1 p-1">
+          <Icon
+            name={s.icon}
+            class="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300"
+          />
+        </a>
+      ))
+    }
+  </div>
+</div>
+</SimpleLayout>
+
+<script>
+  // Progressive enhancement over the plain POST. Everything here is an upgrade
+  // on a form that already works: if the script never runs, the browser
+  // validates natively and posts to ezform.
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const panel = document.querySelector<HTMLElement>('[data-form-panel]');
+  const success = document.querySelector<HTMLElement>('[data-form-success]');
+  const sendError = document.querySelector<HTMLElement>('[data-send-error]');
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  if (form && panel && success) {
+    // From here the page owns the messaging, so the browser should stop
+    // putting its own bubbles over the top of it.
+    form.noValidate = true;
+
+    type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+    // Deliberately loose. The address is checked for shape, not existence, and
+    // anything stricter starts rejecting addresses that are perfectly real.
+    const emailShape = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // ezform's own per-value ceiling. Over it the body is rejected as
+    // malformed and still answered 200, which looks exactly like success.
+    const maxValueLength = 10_000;
+
+    const rules: Record<string, (value: string) => string | null> = {
+      name: (v) => (v.trim() ? null : 'Enter your name.'),
+      email: (v) => {
+        if (!v.trim()) return 'Enter your email address.';
+        if (!emailShape.test(v.trim())) return 'That does not look like an email address.';
+        return null;
+      },
+      topic: (v) => (v ? null : 'Pick a topic.'),
+      message: (v) => {
+        if (!v.trim()) return 'Enter a message.';
+        if (v.trim().length < 10) return 'A sentence or two, so I know what this is about.';
+        if (v.length > maxValueLength) return 'That is longer than 10,000 characters.';
+        return null;
+      },
+    };
+
+    const fields = Object.keys(rules)
+      .map((name) => form.elements.namedItem(name) as Field | null)
+      .filter((el): el is Field => el !== null);
+
+    function show(el: Field, message: string | null) {
+      const target = document.querySelector<HTMLElement>(`[data-error-for="${el.name}"]`);
+      el.classList.toggle('field-invalid', message !== null);
+      if (message) {
+        el.setAttribute('aria-invalid', 'true');
+        el.setAttribute('aria-describedby', `${el.name}-error`);
+      } else {
+        el.removeAttribute('aria-invalid');
+        el.removeAttribute('aria-describedby');
+      }
+      if (!target) return;
+      target.textContent = message ?? '';
+      target.hidden = message === null;
+    }
+
+    const check = (el: Field) => {
+      const message = rules[el.name]?.(el.value) ?? null;
+      show(el, message);
+      return message === null;
+    };
+
+    // Nothing is marked wrong until the first submit. Complaining about an
+    // empty field somebody has not finished typing in is its own annoyance.
+    // Once they have been told, though, the message clears as they fix it
+    // rather than waiting for another submit.
+    let attempted = false;
+    for (const el of fields) {
+      const revalidate = () => {
+        if (attempted) check(el);
+      };
+      el.addEventListener('input', revalidate);
+      el.addEventListener('change', revalidate);
+      el.addEventListener('blur', revalidate);
+    }
+
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const pause = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, reduceMotion.matches ? 0 : ms));
+
+    async function swapInThanks() {
+      panel!.classList.add('opacity-0', '-translate-y-1');
+      await pause(150);
+      panel!.hidden = true;
+
+      success!.hidden = false;
+      // Read back a layout value so the browser paints the starting state
+      // before the classes come off, or there is nothing to transition from.
+      void success!.offsetHeight;
+      success!.classList.remove('opacity-0', 'translate-y-2');
+      success!.focus();
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      attempted = true;
+      if (sendError) sendError.hidden = true;
+
+      // Every field is checked, not just up to the first failure, so the page
+      // reports everything that is wrong at once.
+      const invalid = fields.filter((el) => !check(el));
+      if (invalid.length > 0) {
+        invalid[0].focus();
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+
+      try {
+        // Form-encoded body plus an Accept header keeps this a CORS-simple
+        // request, so there is no preflight round trip before the lead lands.
+        // ezform answers JSON to anything that asks for it.
+        const body = new URLSearchParams([...new FormData(form)] as [string, string][]);
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body,
+        });
+        if (!response.ok) throw new Error(`ezform answered ${response.status}`);
+
+        await swapInThanks();
+      } catch {
+        // A network failure, or an origin this form has not been told about:
+        // the response carries no CORS headers and fetch rejects rather than
+        // resolving. Either way the message did not get through, and what they
+        // typed is still sitting in the form.
+        if (sendError) sendError.hidden = false;
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Send message';
+        }
+      }
+    });
+  }
+</script>

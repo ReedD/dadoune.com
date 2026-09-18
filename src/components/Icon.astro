@@ -14,13 +14,15 @@ interface Props {
     | 'arrow-left'
     | 'close'
     | 'link'
-    | 'briefcase';
+    | 'briefcase'
+    | 'warning'
+    | 'check-circle';
   class?: string;
 }
 
 const { name, class: className = '' } = Astro.props;
 
-const stroked = ['sun', 'chevron-right', 'chevron-down', 'arrow-left', 'close', 'briefcase'];
+const stroked = ['sun', 'chevron-right', 'chevron-down', 'arrow-left', 'close', 'briefcase', 'check-circle'];
 const isStroked = stroked.includes(name);
 ---
 
@@ -88,6 +90,16 @@ const isStroked = stroked.includes(name);
   }
   {name === 'chevron-right' && <path d="M6.75 5.75 9.25 8l-2.5 2.25" />}
   {name === 'chevron-down' && <path d="M1.75 1.75 4 4.25l2.25-2.5" />}
+  {
+    name === 'warning' && (
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+      />
+    )
+  }
+  {name === 'check-circle' && <path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />}
   {name === 'arrow-left' && <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" />}
   {name === 'close' && <path d="m17.25 6.75-10.5 10.5M6.75 6.75l10.5 10.5" stroke="currentColor" />}
   {

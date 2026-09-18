@@ -76,3 +76,28 @@ html {
 .dark .prose :where(code):not(:where(pre *, [class~='not-prose'] *)) {
   background-color: --alpha(var(--color-zinc-800) / 60%);
 }
+
+/* Named for nothing in particular, on purpose. It pulls a field out of view
+   without taking it out of the layout tree: still submitted, still fillable by
+   anything that reads the DOM rather than the pixels, which is the whole point
+   where it is used. `display: none`, `hidden`, `sr-only` and anything with
+   "hidden" or "trap" in the name are all things a script can grep the
+   stylesheet for, so this says nothing about itself. */
+.field-meta {
+  position: absolute;
+  left: -5000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* A field the client-side checks rejected. Written here rather than as a
+   utility on the element because it has to beat the outline colour baked into
+   the shared field class, and unlayered rules outrank Tailwind's utilities. */
+.field-invalid {
+  outline-color: --alpha(var(--color-red-500) / 70%);
+}
+
+.dark .field-invalid {
+  outline-color: --alpha(var(--color-red-400) / 70%);
+}

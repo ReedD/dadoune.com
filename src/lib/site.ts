@@ -3,7 +3,6 @@ export const site = {
   title: 'Reed Dadoune',
   tagline: 'Software Engineer',
   url: 'https://www.dadoune.com',
-  email: 'reed@dadoune.com',
   github: 'ReedD',
   repo: 'https://github.com/ReedD/dadoune.com',
   description:
@@ -18,6 +17,7 @@ export const site = {
 export const nav = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
+  { href: '/contact', label: 'Contact' },
 ] as const;
 
 export const socials = [
@@ -32,7 +32,9 @@ export const socials = [
     label: 'LinkedIn',
     icon: 'linkedin',
   },
-  { href: `mailto:${site.email}`, label: 'Email', icon: 'mail' },
+  // The contact form, not a mailto: the address stays off the page so it
+  // cannot be scraped, and every enquiry lands in one place.
+  { href: '/contact', label: 'Email', icon: 'mail' },
 ] as const;
 
 export function formatDate(date: Date) {
