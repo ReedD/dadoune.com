@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import pmbLight from '../assets/projects/pmb-light.png';
 import pmbDark from '../assets/projects/pmb-dark.png';
 import rbr from '../assets/projects/rbr.png';
+import ezform from '../assets/projects/ezform.png';
 
 const projects = [
   {
@@ -21,6 +22,20 @@ const projects = [
     alt: 'The planmybackpack home page, with a pack list preview below the headline',
   },
   {
+    name: 'ezform.io',
+    href: 'https://ezform.io',
+    // TODO(reed): role, summary and detail are your words to write. The
+    // summary and detail below are lifted from ezform.io's own hero copy and
+    // docs/ so they are at least in your voice, not mine.
+    role: 'Side project, 2026 to present',
+    summary: 'A form backend that does not lose leads.',
+    detail:
+      'The public endpoint validates, persists the submission and returns, so nothing in the request path can fail once the lead is durable. Everything after that sits behind a queue: triage classifies and resolves routes, a drain worker renders the mail, sends it and records every attempt, and an hourly sweep recovers whatever stalled. Postgres through Prisma, Terraform for infrastructure.',
+    stack: ['TypeScript', 'Next.js', 'Astro', 'Prisma', 'PostgreSQL', 'AWS Lambda', 'SQS', 'Terraform'],
+    image: ezform,
+    alt: 'The ezform home page, with a contact form snippet beside the headline',
+  },
+  {
     name: 'ritualbeautyroom.com',
     href: 'https://ritualbeautyroom.com',
     role: 'Built and maintained for my wife',
@@ -35,8 +50,8 @@ const projects = [
 ---
 
 <SimpleLayout
-  title="A couple of sites I keep running."
-  intro="One is my wife’s business. The other is a passion project of mine."
+  title="A few projects I built and maintain."
+  intro="Some I built for family. The rest I built to scratch an itch."
   pageTitle="Projects"
   description="Side projects built and maintained by Reed Dadoune."
 >
