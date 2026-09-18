@@ -5,7 +5,7 @@ variable "domain_name" {
 }
 
 variable "hosted_zone_id" {
-  description = "Route53 zone for the domain."
+  description = "Route53 zone for the domain. Managed as aws_route53_zone.main; this is the id the import block adopts."
   type        = string
   default     = "Z30ID8QOBNK0FP"
 }
@@ -24,4 +24,9 @@ variable "redirect_bucket_name" {
 
 locals {
   www_domain = "www.${var.domain_name}"
+
+  # Fixed, global, and the same in every account: the zone every CloudFront
+  # alias target lives in. Records aliasing a distribution this config does not
+  # manage have to name it literally.
+  cloudfront_zone_id = "Z2FDTNDATAQYW2"
 }

@@ -44,6 +44,15 @@ import {
   id = "EPBXY88A9V80N"
 }
 
+# The zone itself, and every record in it that Route53 did not create with the
+# zone. NS and SOA are left alone: they cannot be deleted, so managing them
+# would only add a way to break delegation.
+
+import {
+  to = aws_route53_zone.main
+  id = "Z30ID8QOBNK0FP"
+}
+
 import {
   to = aws_route53_record.www
   id = "Z30ID8QOBNK0FP_www.dadoune.com_A"
@@ -52,4 +61,53 @@ import {
 import {
   to = aws_route53_record.apex
   id = "Z30ID8QOBNK0FP_dadoune.com_A"
+}
+
+import {
+  to = aws_route53_record.mx
+  id = "Z30ID8QOBNK0FP_dadoune.com_MX"
+}
+
+import {
+  to = aws_route53_record.txt
+  id = "Z30ID8QOBNK0FP_dadoune.com_TXT"
+}
+
+import {
+  to = aws_route53_record.dmarc
+  id = "Z30ID8QOBNK0FP__dmarc.dadoune.com_TXT"
+}
+
+import {
+  to = aws_route53_record.dkim_google
+  id = "Z30ID8QOBNK0FP_google._domainkey.dadoune.com_TXT"
+}
+
+import {
+  to = aws_route53_record.dkim_mail
+  id = "Z30ID8QOBNK0FP_mail._domainkey.dadoune.com_TXT"
+}
+
+import {
+  to = aws_route53_record.mail
+  id = "Z30ID8QOBNK0FP_mail.dadoune.com_CNAME"
+}
+
+import {
+  to = aws_route53_record.acm_validation
+  id = "Z30ID8QOBNK0FP__4dd1cba2fd6ccb9a5646d4a9ad0c727c.dadoune.com_CNAME"
+}
+
+import {
+  for_each = toset(["A", "AAAA"])
+
+  to = aws_route53_record.media[each.key]
+  id = "Z30ID8QOBNK0FP_media.dadoune.com_${each.key}"
+}
+
+import {
+  for_each = toset([for n in range(10) : "i${n}"])
+
+  to = aws_route53_record.image_shards[each.key]
+  id = "Z30ID8QOBNK0FP_${each.key}.dadoune.com_CNAME"
 }
