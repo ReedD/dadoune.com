@@ -50,10 +50,27 @@ behind it, no failover entries to keep in order.
 ## Why the S3 website endpoint
 
 CloudFront points at the bucket's *website* endpoint rather than its REST
-endpoint. That is what makes `/blog/some-post/` serve `.../index.html` with no
-CloudFront function, which is exactly what Astro's directory output needs. The
-cost is that the bucket must be publicly readable, since website endpoints
-cannot use an origin access identity.
+endpoint, for its index-document resolution and its `error_document`. The cost
+is that the bucket must be publicly readable, since website endpoints cannot
+use an origin access identity.
+
+## Why there is a CloudFront function after all
+
+The website endpoint resolves a directory by redirecting: `/blog/some-post`
+answers `302` to `/blog/some-post/`. That is where this site's trailing slashes
+came from. Nothing chose them, they are what the endpoint does with Astro's
+directory output.
+
+`functions/canonical-urls.js` moves that resolution in front of the origin, so
+`/blog/some-post` is rewritten to `.../index.html` and served at `200` with the
+URL left alone. The slash form still answers, as a `301` to the slash-less one,
+because it was canonical here from the 2018 react-static build until this
+changed and is what is indexed. `trailingSlash: 'never'` in `astro.config.mjs`
+points the canonical tags, `og:url` and the sitemap at the same form.
+
+Two paths are exempt: `/.well-known/*`, where domain-verification files are
+fetched at the exact path they were written to, and anything whose last segment
+has an extension, which is every asset.
 
 ## Usage
 

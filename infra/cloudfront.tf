@@ -11,6 +11,17 @@ locals {
   origin_id = "S3Bucket"
 }
 
+# Resolves directory-style output without the trailing slash the S3 website
+# endpoint would otherwise redirect to. See infra/functions/canonical-urls.js
+# for what it does and why the slash form still answers.
+resource "aws_cloudfront_function" "canonical_urls" {
+  name    = "dadoune-com-canonical-urls"
+  runtime = "cloudfront-js-2.0"
+  comment = "Rewrite /page to /page/index.html; 301 /page/ to /page"
+  publish = true
+  code    = file("${path.module}/functions/canonical-urls.js")
+}
+
 resource "aws_cloudfront_distribution" "www" {
   enabled         = true
   aliases         = [local.www_domain]
@@ -56,6 +67,11 @@ resource "aws_cloudfront_distribution" "www" {
       cookies {
         forward = "none"
       }
+    }
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.canonical_urls.arn
     }
   }
 

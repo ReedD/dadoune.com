@@ -1,7 +1,11 @@
 # The site bucket is served through CloudFront via its S3 *website* endpoint
-# rather than the REST endpoint. That is what makes /blog/some-post/ resolve to
-# .../index.html without a CloudFront function, so Astro's directory-style
-# output works with no rewrite rules.
+# rather than the REST endpoint, for the index-document resolution and the
+# error_document below.
+#
+# It no longer resolves the site's page URLs: that endpoint answers /blog/post
+# with a 302 to /blog/post/, and the trailing slash is not wanted. A viewer
+# -request function does the resolution at the edge instead. See
+# infra/functions/canonical-urls.js.
 
 resource "aws_s3_bucket" "site" {
   bucket = var.site_bucket_name
