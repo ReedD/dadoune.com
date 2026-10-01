@@ -145,3 +145,31 @@ resource "aws_route53_record" "image_shards" {
   records = ["dp5dqch5shuo2.cloudfront.net"]
 }
 
+
+# --- Home network -------------------------------------------------------
+
+# The UniFi console on the LAN. A private address in a public zone is
+# deliberate: it is what lets the console hold a certificate for a name that
+# validates, instead of the self-signed one it ships with.
+#
+# The console will not create this record itself. It issues its certificate
+# over DNS-01, which proves control of the name by writing a challenge TXT and
+# nothing else; CloudTrail for the unifi-acme-dns01 user shows a single
+# ChangeResourceRecordSets, UPSERT TXT on _acme-challenge. The policy in
+# unifi.tf was deliberately opened to permit an A record on this name while
+# that was tested, and the console never attempted one. So the address record
+# is ours to keep here.
+#
+# The name only resolves usefully from inside the network. Two things follow.
+# Resolvers that implement DNS rebinding protection (Unbound's private-address
+# default, dnsmasq's stop-dns-rebind) will refuse to return this answer, so the
+# name can fail depending on whose resolver is in front of it. And off the LAN
+# it points at whatever else lives on 192.168.1.1, which is what the
+# certificate now makes fail loudly rather than quietly.
+resource "aws_route53_record" "unifi" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "unifi.${var.domain_name}"
+  type    = "A"
+  ttl     = 300
+  records = ["192.168.1.1"]
+}
